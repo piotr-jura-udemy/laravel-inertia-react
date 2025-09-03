@@ -29,8 +29,8 @@ class PostController extends Controller
 
     public function store(Request $request): RedirectResponse {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string|max:255'
+            'title' => 'required|string|min:3|max:255',
+            'body' => 'required|string|min:10|max:255'
         ]);
         
         Post::create($validated);
