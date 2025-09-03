@@ -6,7 +6,6 @@ export default function About() {
         <AppLayout>
             <h1>About</h1>
             <div>Welcome to about page</div>
-            <Link href="/">Home</Link>
         </AppLayout>
     );
 }
