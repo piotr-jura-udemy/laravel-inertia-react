@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import AppHeaderLink from "./app-header-link";
 import AppHeaderLogo from "./app-header-logo";
 
@@ -8,6 +9,7 @@ export default function AppHeader() {
                 <nav className="flex items-center justify-between">
                     <AppHeaderLogo />
                     <div className="flex space-x-6">
+                        <Link href="/posts/create">Add Post</Link>
                         <AppHeaderLink href="/">Home</AppHeaderLink>
                         <AppHeaderLink href="/about">About</AppHeaderLink>
                         <AppHeaderLink href="/posts">Posts</AppHeaderLink>
