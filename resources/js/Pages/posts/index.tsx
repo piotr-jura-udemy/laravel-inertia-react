@@ -20,13 +20,16 @@ export default function PostsIndex({ posts }: PostsIndexProps) {
                         {posts.map((post) => (
                             <article
                                 key={post.id}
-                                className="border-b border-gray-200 pb-6 last:border-b-0"
+                                className="border-b border-gray-200 py-6 last:pb-0 last:border-b-0"
                             >
                                 <h2 className="text-xl font-semibold mb-2">
                                     <Link href={`/posts/${post.id}`}>
                                         {post.title}
                                     </Link>
                                 </h2>
+                                <p className="text-sm text-gray-500 mb-2">
+                                    By {post.user.name}
+                                </p>
                                 <p className="text-gray-600">
                                     {post.body.substring(0, 200)}
                                     {post.body.length > 200 && "..."}
