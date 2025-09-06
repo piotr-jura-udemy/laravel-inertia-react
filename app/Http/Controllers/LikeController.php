@@ -28,11 +28,8 @@ class LikeController extends Controller
             $liked = true;
         }
 
-        $likesCount = $post->likes()->count();
-
-        return response()->json([
-            'liked' => $liked,
-            'likes_count' => $likesCount
-        ]);
+        // For optimistic UI, we don't need to return the data
+        // The frontend handles the state optimistically
+        return redirect()->back();
     }
 }
