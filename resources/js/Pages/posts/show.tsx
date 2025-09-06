@@ -1,4 +1,11 @@
 import AppLayout from "@/layouts/app-layout";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Post } from "@/types";
 
 interface PostsShowProps {
@@ -8,9 +15,17 @@ interface PostsShowProps {
 export default function PostsShow({ post }: PostsShowProps) {
     return (
         <AppLayout>
-            <h1 className="text-xl font-semibold mb-2">{post.title}</h1>
-            <p className="text-sm text-gray-500 mb-2">By {post.user.name}</p>
-            <p className="text-gray-600">{post.body}</p>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl">{post.title}</CardTitle>
+                    <CardDescription>By {post.user.name}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="prose prose-sm max-w-none">
+                        <p className="whitespace-pre-wrap">{post.body}</p>
+                    </div>
+                </CardContent>
+            </Card>
         </AppLayout>
     );
 }

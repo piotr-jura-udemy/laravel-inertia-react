@@ -1,4 +1,11 @@
 import AppLayout from "@/layouts/app-layout";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Post } from "@/types";
 import { Link } from "@inertiajs/react";
 
@@ -10,31 +17,41 @@ export default function PostsIndex({ posts }: PostsIndexProps) {
     return (
         <AppLayout>
             <div className="space-y-6">
-                <h1 className="text-2xl font-bold text-gray-900">Posts</h1>
                 {posts.length === 0 ? (
-                    <div className="text-center py-8">
-                        <p className="text-gray-500">No posts found.</p>
-                    </div>
+                    <Card>
+                        <CardContent className="flex items-center justify-center py-12">
+                            <p className="text-muted-foreground">
+                                No posts found.
+                            </p>
+                        </CardContent>
+                    </Card>
                 ) : (
-                    <div>
+                    <div className="space-y-4">
                         {posts.map((post) => (
-                            <article
+                            <Card
                                 key={post.id}
-                                className="border-b border-gray-200 py-6 last:border-b-0 last:pb-0"
+                                className="transition-colors hover:bg-muted/50"
                             >
-                                <h2 className="text-xl font-semibold mb-2">
-                                    <Link href={`/posts/${post.id}`}>
-                                        {post.title}
-                                    </Link>
-                                </h2>
-                                <p className="text-sm text-gray-500 mb-2">
-                                    By {post.user.name}
-                                </p>
-                                <p className="text-gray-600">
-                                    {post.body.substring(0, 200)}
-                                    {post.body.length > 200 && "..."}
-                                </p>
-                            </article>
+                                <CardHeader>
+                                    <CardTitle className="text-xl">
+                                        <Link
+                                            href={`/posts/${post.id}`}
+                                            className="hover:underline"
+                                        >
+                                            {post.title}
+                                        </Link>
+                                    </CardTitle>
+                                    <CardDescription>
+                                        By {post.user.name}
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-muted-foreground">
+                                        {post.body.substring(0, 200)}
+                                        {post.body.length > 200 && "..."}
+                                    </p>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 )}

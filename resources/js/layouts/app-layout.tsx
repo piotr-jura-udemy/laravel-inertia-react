@@ -1,4 +1,5 @@
 import AppHeader from "@/components/app-header";
+import { Card, CardContent } from "@/components/ui/card";
 import { ReactNode } from "react";
 
 interface AppLayoutProps {
@@ -7,13 +8,9 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="min-h-screen bg-background">
             <AppHeader />
-            <main className="max-w-4xl mx-auto px-4 py-8">
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                    {children}
-                </div>
-            </main>
+            <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>
         </div>
     );
 }

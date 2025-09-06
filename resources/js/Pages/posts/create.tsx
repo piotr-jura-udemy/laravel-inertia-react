@@ -1,62 +1,64 @@
 import AppLayout from "@/layouts/app-layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Form } from "@inertiajs/react";
 
 export default function PostsCreate() {
     return (
         <AppLayout>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Create Post
-            </h1>
-            <Form action="/posts" method="post" className="space-y-4">
-                {({ errors }) => (
-                    <>
-                        <div>
-                            <label htmlFor="title" className="block mb-1">
-                                Title
-                            </label>
-                            <input
-                                id="title"
-                                name="title"
-                                type="text"
-                                className={cn(
-                                    "w-full border rounded px-3 py-2",
-                                    errors.title && "border-red-500"
+            <div className="space-y-6">
+                <h1 className="text-2xl font-bold tracking-tight">
+                    Create Post
+                </h1>
+                <Form action="/posts" method="post" className="space-y-6">
+                    {({ errors }) => (
+                        <>
+                            <div className="space-y-2">
+                                <Label htmlFor="title">Title</Label>
+                                <Input
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    className={cn(
+                                        errors.title &&
+                                            "border-destructive focus-visible:ring-destructive/20"
+                                    )}
+                                    aria-invalid={!!errors.title}
+                                />
+                                {errors.title && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.title}
+                                    </p>
                                 )}
-                            />
-                            {errors.title && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {errors.title}
-                                </p>
-                            )}
-                        </div>
-                        <div>
-                            <label htmlFor="body" className="block mb-1">
-                                Body
-                            </label>
-                            <textarea
-                                id="body"
-                                name="body"
-                                className={cn(
-                                    "w-full border rounded px-3 py-2",
-                                    errors.body && "border-red-500"
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="body">Body</Label>
+                                <Textarea
+                                    id="body"
+                                    name="body"
+                                    rows={6}
+                                    className={cn(
+                                        errors.body &&
+                                            "border-destructive focus-visible:ring-destructive/20"
+                                    )}
+                                    aria-invalid={!!errors.body}
+                                />
+                                {errors.body && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.body}
+                                    </p>
                                 )}
-                            />
-                            {errors.body && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {errors.body}
-                                </p>
-                            )}
-                        </div>
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded"
-                        >
-                            Create
-                        </button>
-                    </>
-                )}
-            </Form>
+                            </div>
+                            <Button type="submit" className="w-full sm:w-auto">
+                                Create Post
+                            </Button>
+                        </>
+                    )}
+                </Form>
+            </div>
         </AppLayout>
     );
 }

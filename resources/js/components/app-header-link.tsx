@@ -1,5 +1,6 @@
 import { Link } from "@inertiajs/react";
 import { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 interface AppHeaderLinkProps {
     href: string;
@@ -8,8 +9,8 @@ interface AppHeaderLinkProps {
 
 export default function AppHeaderLink({ href, children }: AppHeaderLinkProps) {
     return (
-        <Link className="text-gray-600 font-medium" href={href}>
-            {children}
-        </Link>
+        <Button variant="ghost" asChild>
+            <Link href={href}>{children}</Link>
+        </Button>
     );
 }
