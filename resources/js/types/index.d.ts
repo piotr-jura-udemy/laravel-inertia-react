@@ -6,6 +6,7 @@ export interface Post {
     updated_at: string;
     user_id: number;
     user: User;
+    comments?: Comment[];
 }
 
 export interface User {
@@ -14,4 +15,14 @@ export interface User {
     email: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Comment {
+    id: number;
+    body: string;
+    created_at: string;
+    updated_at: string;
+    post_id: number;
+    user_id: number;
+    user: User;
 }
