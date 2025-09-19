@@ -6,6 +6,7 @@ export interface Post {
     updated_at: string;
     user_id: number;
     user?: User;
+    comments?: Comment[];
 }
 
 export interface User {
