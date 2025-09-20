@@ -19,11 +19,15 @@ class PostController extends Controller
 
     // index, show, edit, update...
     public function show(string $id): Response {
+        $post = Post::with('user')->findOrFail($id);
         return Inertia::render('posts/show', [
-            'post' => Post::with([
-                'user', 
-                'comments' => fn ($query) => $query->with('user')->latest()
-            ])->findOrFail($id)
+            'post' => $post,
+            'comments' => Inertia::defer(
+                fn() => $post->comments()
+                    ->with('user')
+                    ->latest()
+                    ->get()
+            )
         ]);
     }
 
