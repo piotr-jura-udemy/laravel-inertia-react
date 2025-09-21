@@ -8,9 +8,9 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import CommentForm from "@/components/comment-form";
-import CommentCard from "@/components/comment-card";
-import { Deferred } from "@inertiajs/react";
-import { useRef } from "react";
+import CommentList from "@/components/comment-list";
+import { Deferred, usePoll } from "@inertiajs/react";
+import { useRef, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface PostsShowProps {
@@ -20,8 +20,47 @@ interface PostsShowProps {
 
 export default function PostsShow({ post, comments }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
+    const [previousCommentsCount, setPreviousCommentsCount] = useState(
+        comments?.length || 0
+    );
+    const [userJustAddedComment, setUserJustAddedComment] = useState(false);
+
+    // Poll for updates every 10 seconds - only reload comments data
+    usePoll(10000, {
+        only: ["comments"],
+    });
+
+    // Track new comments and show notification
+    useEffect(() => {
+        const currentCommentsCount = comments?.length || 0;
+        const newCommentsCount = currentCommentsCount - previousCommentsCount;
+
+        if (
+            newCommentsCount > 0 &&
+            previousCommentsCount > 0 &&
+            !userJustAddedComment
+        ) {
+            toast(
+                `${newCommentsCount} new comment${
+                    newCommentsCount > 1 ? "s" : ""
+                } available`,
+                {
+                    description: "Fresh comments just loaded!",
+                    duration: 3000,
+                }
+            );
+        }
+
+        // Reset the flag after processing
+        if (userJustAddedComment) {
+            setUserJustAddedComment(false);
+        }
+
+        setPreviousCommentsCount(currentCommentsCount);
+    }, [comments, previousCommentsCount, userJustAddedComment]);
 
     const handleCommentAdded = () => {
+        setUserJustAddedComment(true);
         toast("Comment has been added", {
             description: "Your comment is already live and visible",
         });
@@ -62,32 +101,9 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                 <div ref={commentsSectionRef}>
                     <Deferred
                         data="comments"
-                        fallback={
-                            <div className="text-center py-8">
-                                <p className="text-gray-500">
-                                    Loading commnets...
-                                </p>
-                            </div>
-                        }
+                        fallback={<CommentList comments={comments || []} />}
                     >
-                        <div className="space-y-4">
-                            {comments && comments.length > 0 ? (
-                                <div>
-                                    {comments.map((comment) => (
-                                        <CommentCard
-                                            key={comment.id}
-                                            comment={comment}
-                                        />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <p className="text-gray-500">
-                                        No comments yet.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                        <CommentList comments={comments} />
                     </Deferred>
                 </div>
             </div>
