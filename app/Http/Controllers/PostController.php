@@ -11,14 +11,16 @@ use Inertia\Response;
 
 class PostController extends Controller
 {
-    public function index(): Response {
+    public function index(): Response
+    {
         return Inertia::render('posts/index', [
             'posts' => Post::with('user')->latest()->get()
         ]);
     }
 
     // index, show, edit, update...
-    public function show(string $id): Response {
+    public function show(string $id): Response
+    {
         $post = Post::with('user')->findOrFail($id);
         return Inertia::render('posts/show', [
             'post' => $post,
@@ -31,16 +33,18 @@ class PostController extends Controller
         ]);
     }
 
-    public function create(): Response {
+    public function create(): Response
+    {
         return Inertia::render('posts/create');
     }
 
-    public function store(Request $request): RedirectResponse {
+    public function store(Request $request): RedirectResponse
+    {
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
             'body' => 'required|string|min:10|max:255'
         ]);
-        
+
         Post::create([
             ...$validated,
             'user_id' => User::inRandomOrder()->first()->id
