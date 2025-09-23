@@ -8,9 +8,8 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import CommentForm from "@/components/comment-form";
-import CommentCard from "@/components/comment-card";
 import { Deferred, usePoll } from "@inertiajs/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import CommentList from "@/components/comment-list";
 
@@ -21,21 +20,44 @@ interface PostsShowProps {
 
 export default function PostsShow({ post, comments }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
+    const commentCountRef = useRef(comments?.length ?? 0);
 
-    usePoll(10000, {
+    const scrollToComments = () =>
+        commentsSectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+
+    usePoll(3_000, {
         only: ["comments"],
     });
+
+    // undefined => 0 => 0 => 1 => 1 => 1 => 3
+    useEffect(() => {
+        // Current length of comments []
+        const newCommentCount = comments?.length ?? 0;
+        // We have stored the previous length
+        // We compare them and show toast if different
+        if (
+            newCommentCount > commentCountRef.current &&
+            commentCountRef.current > 0
+        ) {
+            toast("New comments available", {
+                duration: 6_000,
+                action: {
+                    label: "View Comments",
+                    onClick: scrollToComments,
+                },
+            });
+        }
+        // And we update the previous length = current length
+        commentCountRef.current = newCommentCount;
+    }, [comments]);
 
     const handleCommentAdded = () => {
         toast("Comment has been added", {
             description: "Your comment is already live and visible",
         });
-        setTimeout(() => {
-            commentsSectionRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        }, 100);
     };
 
     return (
