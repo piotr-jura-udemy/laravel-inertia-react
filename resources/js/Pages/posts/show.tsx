@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import CommentForm from "@/components/comment-form";
 import CommentCard from "@/components/comment-card";
-import { Deferred } from "@inertiajs/react";
+import { Deferred, usePoll } from "@inertiajs/react";
 import { useRef } from "react";
 import { toast } from "sonner";
 
@@ -20,6 +20,10 @@ interface PostsShowProps {
 
 export default function PostsShow({ post, comments }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
+
+    usePoll(10000, {
+        only: ["comments"],
+    });
 
     const handleCommentAdded = () => {
         toast("Comment has been added", {
@@ -63,10 +67,23 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                     <Deferred
                         data="comments"
                         fallback={
-                            <div className="text-center py-8">
-                                <p className="text-gray-500">
-                                    Loading commnets...
-                                </p>
+                            <div className="space-y-4">
+                                {comments && comments.length > 0 ? (
+                                    <div>
+                                        {comments.map((comment) => (
+                                            <CommentCard
+                                                key={comment.id}
+                                                comment={comment}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <p className="text-gray-500">
+                                            No comments yet.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         }
                     >
