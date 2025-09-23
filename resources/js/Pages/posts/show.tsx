@@ -12,6 +12,7 @@ import CommentCard from "@/components/comment-card";
 import { Deferred, usePoll } from "@inertiajs/react";
 import { useRef } from "react";
 import { toast } from "sonner";
+import CommentList from "@/components/comment-list";
 
 interface PostsShowProps {
     post: Post;
@@ -66,45 +67,9 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                 <div ref={commentsSectionRef}>
                     <Deferred
                         data="comments"
-                        fallback={
-                            <div className="space-y-4">
-                                {comments && comments.length > 0 ? (
-                                    <div>
-                                        {comments.map((comment) => (
-                                            <CommentCard
-                                                key={comment.id}
-                                                comment={comment}
-                                            />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <p className="text-gray-500">
-                                            No comments yet.
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        }
+                        fallback={<CommentList comments={comments ?? []} />}
                     >
-                        <div className="space-y-4">
-                            {comments && comments.length > 0 ? (
-                                <div>
-                                    {comments.map((comment) => (
-                                        <CommentCard
-                                            key={comment.id}
-                                            comment={comment}
-                                        />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <p className="text-gray-500">
-                                        No comments yet.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                        <CommentList comments={comments} />
                     </Deferred>
                 </div>
             </div>
