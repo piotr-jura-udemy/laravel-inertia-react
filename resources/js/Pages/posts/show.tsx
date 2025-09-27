@@ -12,7 +12,7 @@ import { Deferred, usePoll } from "@inertiajs/react";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import CommentList from "@/components/comment-list";
-import LikeBar from "@/components/like-bar";
+import LikeButton from "@/components/like-button";
 
 interface PostsShowProps {
     post: Post;
@@ -85,14 +85,25 @@ export default function PostsShow({ post, comments, likes }: PostsShowProps) {
                             {post.body}
                         </p>
 
-                        {/* Like Bar */}
+                        {/* Like Button */}
                         <Deferred
                             data="likes"
                             fallback={
-                                <LikeBar postId={post.id} likes={likes} />
+                                <LikeButton
+                                    postId={post.id}
+                                    initialCount={likes?.count ?? 0}
+                                    initialLiked={
+                                        likes?.user_has_liked ?? false
+                                    }
+                                    isLoading={!likes}
+                                />
                             }
                         >
-                            <LikeBar postId={post.id} likes={likes} />
+                            <LikeButton
+                                postId={post.id}
+                                initialCount={likes.count}
+                                initialLiked={likes.user_has_liked}
+                            />
                         </Deferred>
                     </CardContent>
                 </Card>
