@@ -7,6 +7,12 @@ export interface Post {
     user_id: number;
     user?: User;
     comments?: Comment[];
+    likes_count?: number;
+}
+
+export interface Like {
+    count: number;
+    user_has_liked: boolean;
 }
 
 export interface User {

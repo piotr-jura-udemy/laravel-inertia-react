@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,3 +27,6 @@ Route::get('/posts/{id}', [PostController::class, 'show']);
 Route::post('/posts', [PostController::class, 'store']);
 
 Route::post('/comments', [CommentController::class, 'store']);
+
+Route::post('/posts/{post}/like', [LikeController::class, 'store']);
+Route::delete('/posts/{post}/like', [LikeController::class, 'destroy']);

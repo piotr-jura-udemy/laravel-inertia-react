@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { Comment, Post } from "@/types";
+import { Comment, Like, Post } from "@/types";
 import {
     Card,
     CardContent,
@@ -12,13 +12,15 @@ import { Deferred, usePoll } from "@inertiajs/react";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import CommentList from "@/components/comment-list";
+import LikeBar from "@/components/like-bar";
 
 interface PostsShowProps {
     post: Post;
     comments: Comment[];
+    likes: Like;
 }
 
-export default function PostsShow({ post, comments }: PostsShowProps) {
+export default function PostsShow({ post, comments, likes }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
     // useState - displayed on the page
     // useRef   - internal logic
@@ -32,7 +34,7 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
         });
 
     usePoll(3_000, {
-        only: ["comments"],
+        only: ["comments", "likes"],
     });
 
     // undefined => 0 => 0 => 1 => 1 => 1 => 3
@@ -79,9 +81,19 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-gray-700 whitespace-pre-wrap">
+                        <p className="text-gray-700 whitespace-pre-wrap mb-4">
                             {post.body}
                         </p>
+
+                        {/* Like Bar */}
+                        <Deferred
+                            data="likes"
+                            fallback={
+                                <LikeBar postId={post.id} likes={likes} />
+                            }
+                        >
+                            <LikeBar postId={post.id} likes={likes} />
+                        </Deferred>
                     </CardContent>
                 </Card>
 
