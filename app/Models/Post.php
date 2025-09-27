@@ -27,9 +27,4 @@ class Post extends Model
     {
         return $this->hasMany(Like::class);
     }
-
-    public function getLikesCountAttribute(): int
-    {
-        return $this->likes()->count();
-    }
 }
