@@ -95,7 +95,7 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                 <div ref={commentsSectionRef}>
                     <Deferred
                         data="comments"
-                        fallback={<CommentList comments={comments ?? []} />}
+                        fallback={<CommentList comments={comments} />}
                     >
                         <CommentList comments={comments} />
                     </Deferred>
