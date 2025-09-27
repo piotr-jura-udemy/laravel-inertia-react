@@ -101,8 +101,8 @@ export default function PostsShow({ post, comments, likes }: PostsShowProps) {
                         >
                             <LikeButton
                                 postId={post.id}
-                                initialCount={likes.count}
-                                initialLiked={likes.user_has_liked}
+                                initialCount={likes?.count ?? 0}
+                                initialLiked={likes?.user_has_liked ?? false}
                             />
                         </Deferred>
                     </CardContent>
