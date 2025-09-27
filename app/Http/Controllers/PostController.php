@@ -24,13 +24,6 @@ class PostController extends Controller
     {
         $post = Post::with('user')->findOrFail($id);
 
-        // Check if current user has liked this post
-        $userHasLiked = Like::where([
-            'post_id' => $post->id,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ])->exists();
-
         return Inertia::render('posts/show', [
             'post' => $post,
             'comments' => Inertia::defer(
@@ -42,7 +35,11 @@ class PostController extends Controller
             'likes' => Inertia::defer(
                 fn() => [
                     'count' => $post->likes()->count(),
-                    'user_has_liked' => $userHasLiked
+                    'user_has_liked' => Like::where([
+                        'post_id' => $post->id,
+                        'ip_address' => $request->ip(),
+                        'user_agent' => $request->userAgent(),
+                    ])->exists()
                 ]
             )
         ]);

@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { Comment, Like, Post } from "@/types";
+import { Comment, PostLikesData, Post } from "@/types";
 import {
     Card,
     CardContent,
@@ -17,7 +17,7 @@ import LikeButton from "@/components/like-button";
 interface PostsShowProps {
     post: Post;
     comments: Comment[];
-    likes: Like;
+    likes: PostLikesData;
 }
 
 export default function PostsShow({ post, comments, likes }: PostsShowProps) {
