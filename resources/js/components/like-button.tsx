@@ -23,20 +23,17 @@ export default function LikeButton({
         if (disabled) return;
 
         setIsLoading(true);
-        const url = `/posts/${postId}/like`;
 
-        const options = {
-            onSuccess: () => toast(initialLiked ? "Unliked!" : "Liked!"),
-            onError: () => toast.error("Failed to update like"),
-            onFinish: () => setIsLoading(false),
-            only: ["likes"], // Only reload likes data, not comments
-        };
-
-        if (initialLiked) {
-            router.delete(url, options);
-        } else {
-            router.post(url, {}, options);
-        }
+        router.post(
+            `/posts/${postId}/like/toggle`,
+            {},
+            {
+                onSuccess: () => toast(initialLiked ? "Unliked!" : "Liked!"),
+                onError: () => toast.error("Failed to update like"),
+                onFinish: () => setIsLoading(false),
+                only: ["likes"], // Only reload likes data, not comments
+            }
+        );
     };
 
     const buttonClass = initialLiked
