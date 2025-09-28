@@ -23,3 +23,7 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .cursor
+
+/resources/js/wayfinder
+/resources/js/actions
+/resources/js/routes

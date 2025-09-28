@@ -2,6 +2,7 @@ import { router } from "@inertiajs/react";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface LikeButtonProps {
     postId: number;
@@ -36,23 +37,25 @@ export default function LikeButton({
         );
     };
 
-    const buttonClass = initialLiked
-        ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
-        : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100";
-
-    const heartClass = initialLiked
-        ? "fill-red-500 text-red-500"
-        : "text-gray-500";
-
     return (
         <button
             onClick={handleToggleLike}
             disabled={disabled}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${buttonClass} ${
+            className={cn(
+                "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors",
+                initialLiked
+                    ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
+                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100",
                 disabled ? "opacity-50 cursor-not-allowed" : "hover:scale-105"
-            }`}
+            )}
         >
-            <Heart size={16} className={`transition-all ${heartClass}`} />
+            <Heart
+                size={16}
+                className={cn(
+                    "transition-all",
+                    initialLiked ? "fill-red-500 text-red-500" : "text-gray-500"
+                )}
+            />
             <span className="text-sm font-medium">{initialCount}</span>
         </button>
     );
