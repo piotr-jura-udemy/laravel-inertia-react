@@ -12,12 +12,12 @@ use Inertia\Inertia;
 // http://localhost:8000 + /
 Route::get('/', function () {
     return Inertia::render('home');
-});
+})->name('home.index');
 
 // http://localhost:8000/about
 Route::get('/about', function () {
     return Inertia::render('about');
-});
+})->name('about.index');
 
 // http://localhost:8000/1
 Route::get('/posts/create', [PostController::class, 'create']);

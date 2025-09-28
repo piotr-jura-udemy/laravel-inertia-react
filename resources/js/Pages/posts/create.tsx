@@ -1,3 +1,4 @@
+import { store } from "@/actions/App/Http/Controllers/PostController";
 import { InputError } from "@/components/input-error";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import AppLayout from "@/layouts/app-layout";
-import { cn } from "@/lib/utils";
 import { Form } from "@inertiajs/react";
 
 export default function PostsCreate() {
@@ -23,7 +23,7 @@ export default function PostsCreate() {
                     <CardDescription>Create a new post</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Form action="/posts" method="post" className="space-y-4">
+                    <Form action={store()} className="space-y-4">
                         {({ errors }) => (
                             <>
                                 <div className="space-y-1">
