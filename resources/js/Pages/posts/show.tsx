@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import CommentList from "@/components/comment-list";
 import LikeButton from "@/components/like-button";
+import { Heart } from "lucide-react";
 
 interface PostsShowProps {
     post: Post;
@@ -91,18 +92,16 @@ export default function PostsShow({ post, comments, likes }: PostsShowProps) {
                             fallback={
                                 <LikeButton
                                     postId={post.id}
-                                    initialCount={likes?.count ?? 0}
-                                    initialLiked={
-                                        likes?.user_has_liked ?? false
-                                    }
+                                    initialCount={likes?.count}
+                                    initialLiked={likes?.user_has_liked}
                                     isLoading={!likes}
                                 />
                             }
                         >
                             <LikeButton
                                 postId={post.id}
-                                initialCount={likes?.count ?? 0}
-                                initialLiked={likes?.user_has_liked ?? false}
+                                initialCount={likes?.count}
+                                initialLiked={likes?.user_has_liked}
                             />
                         </Deferred>
                     </CardContent>

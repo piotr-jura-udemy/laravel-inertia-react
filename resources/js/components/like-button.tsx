@@ -6,15 +6,15 @@ import { cn } from "@/lib/utils";
 
 interface LikeButtonProps {
     postId: number;
-    initialCount: number;
-    initialLiked: boolean;
+    initialCount?: number;
+    initialLiked?: boolean;
     isLoading?: boolean;
 }
 
 export default function LikeButton({
     postId,
-    initialCount,
-    initialLiked,
+    initialCount = 0,
+    initialLiked = false,
     isLoading: externalLoading = false,
 }: LikeButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
