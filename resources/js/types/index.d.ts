@@ -8,6 +8,7 @@ export interface Post {
     user?: User;
     comments?: Comment[];
     likes?: Like[];
+    likes_count?: number;
 }
 
 export interface User {

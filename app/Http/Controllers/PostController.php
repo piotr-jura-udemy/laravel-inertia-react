@@ -12,8 +12,9 @@ use Inertia\Response;
 class PostController extends Controller
 {
     public function index(): Response {
+        // likes_count
         return Inertia::render('posts/index', [
-            'posts' => Post::with('user')->latest()->get()
+            'posts' => Post::with('user')->withCount('likes')->latest()->get()
         ]);
     }
 
