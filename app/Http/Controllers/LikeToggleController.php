@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class LikeToggleController extends Controller
 {
-    public function store(Request $request, Post $post)
+    public function __invoke(Request $request, Post $post)
     {
         $ipAddress = $request->ip();
         $userAgent = $request->userAgent();

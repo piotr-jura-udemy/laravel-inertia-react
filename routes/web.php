@@ -28,4 +28,4 @@ Route::post('/posts', [PostController::class, 'store']);
 
 Route::post('/comments', [CommentController::class, 'store']);
 
-Route::post('/posts/{post}/like/toggle', [LikeToggleController::class, 'store']);
+Route::post('/posts/{post}/like/toggle', LikeToggleController::class);
