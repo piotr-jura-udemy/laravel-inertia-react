@@ -35,8 +35,7 @@ class PostController extends Controller
             'likes' => Inertia::defer(
                 fn() => [
                     'count' => $post->likes()->count(),
-                    'user_has_liked' => Like::where([
-                        'post_id' => $post->id,
+                    'user_has_liked' => $post->likes->where([
                         'ip_address' => $request->ip(),
                         'user_agent' => $request->userAgent(),
                     ])->exists()
