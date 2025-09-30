@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { Comment, Post } from "@/types";
+import { Comment, Post, PostLikesData } from "@/types";
 import {
     Card,
     CardContent,
@@ -17,9 +17,10 @@ import LikeButton from "@/components/like-button";
 interface PostsShowProps {
     post: Post;
     comments: Comment[];
+    likes: PostLikesData;
 }
 
-export default function PostsShow({ post, comments }: PostsShowProps) {
+export default function PostsShow({ post, comments, likes }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
     // useState - displayed on the page
     // useRef   - internal logic
@@ -33,7 +34,7 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
         });
 
     usePoll(3_000, {
-        only: ["comments"],
+        only: ["comments", "likes"],
     });
 
     // undefined => 0 => 0 => 1 => 1 => 1 => 3
@@ -83,12 +84,23 @@ export default function PostsShow({ post, comments }: PostsShowProps) {
                         <p className="text-gray-700 whitespace-pre-wrap">
                             {post.body}
                         </p>
-                        <LikeButton
-                            postId={post.id}
-                            count={10}
-                            liked={true}
-                            isLoading={true}
-                        />
+                        <Deferred
+                            data="likes"
+                            fallback={
+                                <LikeButton
+                                    postId={post.id}
+                                    count={likes?.count}
+                                    liked={likes?.user_has_liked}
+                                    isLoading={!likes}
+                                />
+                            }
+                        >
+                            <LikeButton
+                                postId={post.id}
+                                count={likes?.count}
+                                liked={likes?.user_has_liked}
+                            />
+                        </Deferred>
                     </CardContent>
                 </Card>
 

@@ -40,3 +40,8 @@ export interface Like {
     created_at: string;
     updated_at: string;
 }
+
+export interface PostLikesData {
+    count: number;
+    user_has_liked: boolean;
+}
