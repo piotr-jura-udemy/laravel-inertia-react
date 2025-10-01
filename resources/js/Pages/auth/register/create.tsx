@@ -1,3 +1,4 @@
+import { create } from "@/actions/App/Http/Controllers/Auth/LoginController";
 import { store } from "@/actions/App/Http/Controllers/Auth/RegisterController";
 import { InputError } from "@/components/input-error";
 import { Button } from "@/components/ui/button";
@@ -84,7 +85,7 @@ export default function Register() {
 
                                 <div className="flex items-center justify-between pt-2">
                                     <Link
-                                        href="/login"
+                                        href={create()}
                                         className="text-sm text-muted-foreground hover:underline"
                                     >
                                         Already registered?
