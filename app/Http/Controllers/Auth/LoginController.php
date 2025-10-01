@@ -14,35 +14,17 @@ class LoginController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('auth/login');
+        return Inertia::render('auth/login/create');
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        if (!Auth::attempt($credentials)) {
-            throw ValidationException::withMessages([
-                'email' => 'These credentials do not match our records.',
-            ]);
-        }
-
-        $request->session()->regenerate();
-
-        return redirect()->intended('/posts');
+        
     }
 
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
     }
 }
 
