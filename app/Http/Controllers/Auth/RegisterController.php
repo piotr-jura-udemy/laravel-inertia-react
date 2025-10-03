@@ -29,13 +29,14 @@ class RegisterController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()]
         ]);
         // create the user -> hash password
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password'])
         ]);
         // (optional) send registered event
         // (optional, but nice) authenticate
+        Auth::login($user);
         // redirect -> intended page or main page
         return redirect('/posts');
     }
