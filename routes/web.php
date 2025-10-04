@@ -14,24 +14,9 @@ use Inertia\Inertia;
 // Request -> Laravel -> http://localhost:8000 -> [Middleware 1] -> Route -> Response
 
 // http://localhost:8000
-
-// http://localhost:8000 + /
 Route::get('/', function () {
-    $posts = Post::with('user')
-        ->withCount(['likes', 'comments'])
-        ->latest()
-        ->take(10)
-        ->get();
-
-    return Inertia::render('home', [
-        'posts' => PostResource::collection($posts)->toArray(request())
-    ]);
-})->name('home.index');
-
-// http://localhost:8000/about
-Route::get('/about', function () {
-    return Inertia::render('about');
-})->name('about.index');
+    return redirect('/posts');
+});
 
 // http://localhost:8000/1
 
@@ -54,4 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    Route::post('/users/{id}/follow', [\App\Http\Controllers\FollowController::class, '__invoke'])->name('users.follow');
 });

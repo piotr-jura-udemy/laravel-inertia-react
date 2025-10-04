@@ -20,6 +20,9 @@ export interface User {
     updated_at: string;
     posts?: Post[];
     comments?: Comment[];
+    followers_count?: number;
+    following_count?: number;
+    is_following?: boolean;
 }
 
 export interface Comment {

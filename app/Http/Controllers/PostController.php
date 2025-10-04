@@ -13,15 +13,34 @@ use Inertia\Response;
 
 class PostController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $posts = Post::with('user')
-            ->withCount(['likes', 'comments'])
-            ->latest()
-            ->get();
+        $view = $request->query('view', 'all');
+
+        $query = Post::with('user')->withCount(['likes', 'comments']);
+
+        switch ($view) {
+            case 'followed':
+                if (!auth()->check()) {
+                    abort(403, 'You must be logged in to view followed posts');
+                }
+                $followingIds = auth()->user()->following()->pluck('users.id');
+                $query->whereIn('user_id', $followingIds);
+                break;
+            case 'popular':
+                $query->where('created_at', '>=', now()->subDays(7))
+                    ->orderByDesc('likes_count');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        $posts = $query->get();
 
         return Inertia::render('posts/index', [
-            'posts' => PostResource::collection($posts)->toArray(request())
+            'posts' => PostResource::collection($posts)->toArray(request()),
+            'currentView' => $view,
         ]);
     }
 

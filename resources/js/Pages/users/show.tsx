@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from "@/layouts/app-layout";
-import { Comment, Post, User } from "@/types";
+import { Comment, Post, User, PageProps } from "@/types";
 import {
     Calendar,
     FileText,
@@ -24,7 +24,8 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from "@/components/ui/empty";
-import { WhenVisible } from "@inertiajs/react";
+import { WhenVisible, router, usePage } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
 
 interface UserShowProps {
     profileUser: User;
@@ -42,6 +43,12 @@ export default function UserShow({
     comments,
     likes,
 }: UserShowProps) {
+    const { auth } = usePage<PageProps>().props;
+
+    const handleFollow = () => {
+        router.post(`/users/${profileUser.id}/follow`);
+    };
+
     return (
         <AppLayout>
             <div>
@@ -50,14 +57,14 @@ export default function UserShow({
                     <CardHeader>
                         <div className="flex items-center gap-3">
                             {/* Avatar Placeholder */}
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shrink-0">
+                            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xl font-bold shrink-0">
                                 {profileUser.name.charAt(0).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <CardTitle className="text-xl">
                                     {profileUser.name}
                                 </CardTitle>
-                                <CardDescription className="flex items-center gap-1 text-xs">
+                                <CardDescription className="flex items-center gap-2 text-xs">
                                     <Calendar size={12} />
                                     Joined{" "}
                                     {new Date(
@@ -66,8 +73,28 @@ export default function UserShow({
                                         month: "short",
                                         year: "numeric",
                                     })}
+                                    <span className="ml-2">
+                                        {profileUser.followers_count ?? 0}{" "}
+                                        followers ·{" "}
+                                        {profileUser.following_count ?? 0}{" "}
+                                        following
+                                    </span>
                                 </CardDescription>
                             </div>
+                            {auth.user && auth.user.id !== profileUser.id && (
+                                <Button
+                                    onClick={handleFollow}
+                                    variant={
+                                        profileUser.is_following
+                                            ? "outline"
+                                            : "default"
+                                    }
+                                >
+                                    {profileUser.is_following
+                                        ? "Unfollow"
+                                        : "Follow"}
+                                </Button>
+                            )}
                         </div>
                     </CardHeader>
                 </Card>

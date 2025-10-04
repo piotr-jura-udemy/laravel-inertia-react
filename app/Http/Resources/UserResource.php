@@ -18,6 +18,9 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'created_at' => $this->created_at?->toISOString(),
+            'followers_count' => $this->whenCounted('followers'),
+            'following_count' => $this->whenCounted('following'),
+            'is_following' => $this->when(isset($this->additional['is_following']), $this->additional['is_following'] ?? false),
         ];
     }
 }

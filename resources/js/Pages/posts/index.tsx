@@ -9,16 +9,35 @@ import {
     EmptyTitle,
 } from "@/components/ui/empty";
 import { FileText } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { router } from "@inertiajs/react";
 
 interface PostsIndexProps {
     posts: Post[];
+    currentView: string;
 }
 
-export default function PostsIndex({ posts }: PostsIndexProps) {
+export default function PostsIndex({
+    posts,
+    currentView = "all",
+}: PostsIndexProps) {
+    const handleViewChange = (view: string) => {
+        router.get("/posts", { view }, { preserveState: true });
+    };
+
     return (
         <AppLayout>
             <div className="space-y-6">
-                <h1 className="text-2xl font-bold text-gray-900">Posts</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold text-gray-900">Posts</h1>
+                </div>
+                <Tabs value={currentView} onValueChange={handleViewChange}>
+                    <TabsList>
+                        <TabsTrigger value="all">All</TabsTrigger>
+                        <TabsTrigger value="followed">Followed</TabsTrigger>
+                        <TabsTrigger value="popular">Popular</TabsTrigger>
+                    </TabsList>
+                </Tabs>
                 {posts.length === 0 ? (
                     <Empty>
                         <EmptyHeader>

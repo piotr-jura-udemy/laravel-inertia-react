@@ -13,10 +13,14 @@ class UserController extends Controller
 {
     public function show(string $id): Response
     {
-        $user = User::findOrFail($id);
+        $user = User::withCount(['followers', 'following'])->findOrFail($id);
+
+        $isFollowing = auth()->check() ? auth()->user()->isFollowing($user) : false;
 
         return Inertia::render('users/show', [
-            'profileUser' => UserResource::make($user)->toArray(request()),
+            'profileUser' => UserResource::make($user)->additional([
+                'is_following' => $isFollowing,
+            ])->toArray(request()),
             'posts' => Inertia::defer(fn() => PostResource::collection(
                 $user->posts()
                     ->with('user')
