@@ -32,10 +32,17 @@ class CommentController extends Controller
     public function store(StoreCommentRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        Comment::create([
+        $comment = Comment::create([
             ...$validated,
-            'user_id' => User::inRandomOrder()->first()->id
+            'user_id' => $request->user()->id
         ]);
+
+        // Notify followers
+        $followers = $request->user()->followers;
+        foreach ($followers as $follower) {
+            $follower->notify(new \App\Notifications\NewCommentFromFollowedUserNotification($request->user(), $comment));
+        }
+
         return redirect()->back();
     }
 

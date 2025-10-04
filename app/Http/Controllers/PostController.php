@@ -69,10 +69,16 @@ class PostController extends Controller
             'body' => 'required|string|min:10|max:255'
         ]);
 
-        Post::create([
+        $post = Post::create([
             ...$validated,
-            'user_id' => User::inRandomOrder()->first()->id
+            'user_id' => $request->user()->id
         ]);
+
+        // Notify followers
+        $followers = $request->user()->followers;
+        foreach ($followers as $follower) {
+            $follower->notify(new \App\Notifications\NewPostFromFollowedUserNotification($request->user(), $post));
+        }
 
         return redirect('/posts');
     }

@@ -28,9 +28,6 @@ export default function PostsIndex({
     return (
         <AppLayout>
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-gray-900">Posts</h1>
-                </div>
                 <Tabs value={currentView} onValueChange={handleViewChange}>
                     <TabsList>
                         <TabsTrigger value="all">All</TabsTrigger>

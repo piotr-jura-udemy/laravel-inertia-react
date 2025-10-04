@@ -53,9 +53,25 @@ export interface PostLikesData {
     user_has_liked: boolean;
 }
 
+export interface NotificationData {
+    id: string;
+    type: string;
+    actor: {
+        id: number;
+        name: string;
+    };
+    data: any;
+    read_at: string | null;
+    created_at: string;
+}
+
 export interface PageProps {
     auth: {
         user: User | null;
     };
+    notifications?: {
+        data: NotificationData[];
+        unread_count: number;
+    } | null;
     [key: string]: any;
 }
