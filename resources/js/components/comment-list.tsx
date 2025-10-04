@@ -22,11 +22,9 @@ export default function CommentList({ comments }: CommentListProps) {
 
     return (
         <div className="space-y-4">
-            <div>
-                {comments.map((comment) => (
-                    <CommentCard key={comment.id} comment={comment} />
-                ))}
-            </div>
+            {comments.map((comment) => (
+                <CommentCard key={comment.id} comment={comment} />
+            ))}
         </div>
     );
 }

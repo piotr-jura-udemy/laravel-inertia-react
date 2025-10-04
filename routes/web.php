@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ToggleLikeController;
+use App\Http\Controllers\UserController;
+use App\Http\Resources\PostResource;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,7 +17,15 @@ use Inertia\Inertia;
 
 // http://localhost:8000 + /
 Route::get('/', function () {
-    return Inertia::render('home');
+    $posts = Post::with('user')
+        ->withCount('likes')
+        ->latest()
+        ->take(10)
+        ->get();
+
+    return Inertia::render('home', [
+        'posts' => PostResource::collection($posts)->toArray(request())
+    ]);
 })->name('home.index');
 
 // http://localhost:8000/about
@@ -33,6 +44,8 @@ Route::post('/auth/logout', [LoginController::class, 'destroy']);
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
 Route::middleware('auth')->group(function () {
     Route::post('/{type}/{id}/likes/toggle', ToggleLikeController::class)->name('likes.toggle');

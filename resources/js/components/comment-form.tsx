@@ -36,7 +36,7 @@ export default function CommentForm({
     }
 
     return (
-        <Card className="rounded-none">
+        <Card>
             <CardHeader>
                 <CardTitle>Add Comment</CardTitle>
                 <CardDescription>

@@ -22,7 +22,7 @@ export default function PostsShow({ post, comments, likes }: PostsShowProps) {
             block: "start",
         });
 
-    usePoll(8_000, {
+    usePoll(30_000, {
         only: ["comments", "likes"],
     });
 
