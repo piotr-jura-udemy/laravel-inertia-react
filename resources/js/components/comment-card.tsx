@@ -6,6 +6,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Comment } from "@/types";
+import LikeButton from "./like-button";
 
 interface CommentCardProps {
     comment: Comment;
@@ -22,7 +23,17 @@ export default function CommentCard({ comment }: CommentCardProps) {
                     {new Date(comment.created_at).toLocaleDateString()}
                 </CardDescription>
             </CardHeader>
-            <CardContent>{comment.body}</CardContent>
+            <CardContent className="space-y-3">
+                <p>{comment.body}</p>
+                {comment.likes_data && (
+                    <LikeButton
+                        type="comments"
+                        id={comment.id}
+                        count={comment.likes_data.count}
+                        liked={comment.likes_data.user_has_liked}
+                    />
+                )}
+            </CardContent>
         </Card>
     );
 }

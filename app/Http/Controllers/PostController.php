@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -13,33 +15,26 @@ class PostController extends Controller
 {
     public function index(): Response
     {
-        // likes_count
+        $posts = Post::with('user')
+            ->withCount('likes')
+            ->latest()
+            ->get();
+
         return Inertia::render('posts/index', [
-            'posts' => Post::with('user')->withCount('likes')->latest()->get()
+            'posts' => PostResource::collection($posts)->toArray(request())
         ]);
     }
 
-    // index, show, edit, update...
     public function show(string $id): Response
     {
         $post = Post::with('user')->findOrFail($id);
+
         return Inertia::render('posts/show', [
-            'post' => $post,
-            'comments' => Inertia::defer(
-                fn() => $post->comments()
-                    ->with('user')
-                    ->latest()
-                    ->get()
-            ),
-            'likes' => Inertia::defer(
-                fn() => [
-                    'count' => $post->likes()->count(),
-                    'user_has_liked' => $post->likes()->where([
-                        'ip_address' => request()->ip(),
-                        'user_agent' => request()->userAgent()
-                    ])->exists()
-                ]
-            )
+            'post' => PostResource::make($post)->toArray(request()),
+            'comments' => Inertia::defer(fn() => CommentResource::collection(
+                $post->comments()->with('user')->latest()->get()
+            )->toArray(request())),
+            'likes' => Inertia::defer(fn() => $post->getLikesData())
         ]);
     }
 

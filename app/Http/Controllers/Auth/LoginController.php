@@ -22,7 +22,7 @@ class LoginController extends Controller
         $credentials = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string'
-        ]);   
+        ]);
 
         if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
@@ -37,7 +37,12 @@ class LoginController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        Auth::logout();
 
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }
 

@@ -30,13 +30,16 @@ export interface Comment {
     user_id: number;
     user?: User;
     post?: Post;
+    likes?: Like[];
+    likes_count?: number;
+    likes_data?: PostLikesData;
 }
 
 export interface Like {
     id: number;
-    post_id: number;
-    ip_address: string;
-    user_agent: string;
+    likeable_type: string;
+    likeable_id: number;
+    user_id: number;
     created_at: string;
     updated_at: string;
 }
@@ -44,4 +47,11 @@ export interface Like {
 export interface PostLikesData {
     count: number;
     user_has_liked: boolean;
+}
+
+export interface PageProps {
+    auth: {
+        user: User | null;
+    };
+    [key: string]: any;
 }
