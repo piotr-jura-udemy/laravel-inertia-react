@@ -12,12 +12,13 @@ import PostCard from "@/components/post-card";
 import CommentCard from "@/components/comment-card";
 import LikedContentCard from "@/components/liked-content-card";
 import EmptyState from "@/components/empty-state";
+import { WhenVisible } from "@inertiajs/react";
 
 interface UserShowProps {
     profileUser: User;
-    posts: Post[];
-    comments: Comment[];
-    likes: Array<{
+    posts?: Post[];
+    comments?: Comment[];
+    likes?: Array<{
         type: "post" | "comment";
         data: Post | Comment;
     }>;
@@ -60,7 +61,7 @@ export default function UserShow({
                 </Card>
 
                 {/* Tabs */}
-                <Tabs defaultValue="posts" className="mt-3">
+                <Tabs defaultValue="posts" className="mt-2">
                     <TabsList>
                         <TabsTrigger value="posts">Posts</TabsTrigger>
                         <TabsTrigger value="replies">Replies</TabsTrigger>
@@ -68,62 +69,83 @@ export default function UserShow({
                     </TabsList>
 
                     <TabsContent value="posts">
-                        {posts.length === 0 ? (
-                            <EmptyState message="No posts yet" />
-                        ) : (
-                            <div className="space-y-4">
-                                {posts.map((post) => (
-                                    <PostCard
-                                        key={post.id}
-                                        post={post}
-                                        variant="minimal"
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <WhenVisible
+                            data="posts"
+                            fallback={<EmptyState message="Loading..." />}
+                        >
+                            {!posts ? (
+                                <EmptyState message="Loading..." />
+                            ) : posts.length === 0 ? (
+                                <EmptyState message="No posts yet" />
+                            ) : (
+                                <div className="space-y-4">
+                                    {posts.map((post) => (
+                                        <PostCard
+                                            key={post.id}
+                                            post={post}
+                                            variant="minimal"
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </WhenVisible>
                     </TabsContent>
 
                     <TabsContent value="replies">
-                        {comments.length === 0 ? (
-                            <EmptyState message="No replies yet" />
-                        ) : (
-                            <div className="space-y-4">
-                                {comments.map((comment) => (
-                                    <CommentCard
-                                        key={comment.id}
-                                        comment={comment}
-                                        variant="with-context"
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <WhenVisible
+                            data="comments"
+                            fallback={<EmptyState message="Loading..." />}
+                        >
+                            {!comments ? (
+                                <EmptyState message="Loading..." />
+                            ) : comments.length === 0 ? (
+                                <EmptyState message="No replies yet" />
+                            ) : (
+                                <div className="space-y-4">
+                                    {comments.map((comment) => (
+                                        <CommentCard
+                                            key={comment.id}
+                                            comment={comment}
+                                            variant="with-context"
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </WhenVisible>
                     </TabsContent>
 
                     <TabsContent value="likes">
-                        {likes.length === 0 ? (
-                            <EmptyState message="No likes yet" />
-                        ) : (
-                            <div className="space-y-4">
-                                {likes.map((like, index) => {
-                                    if (like.type === "post") {
+                        <WhenVisible
+                            data="likes"
+                            fallback={<EmptyState message="Loading..." />}
+                        >
+                            {!likes ? (
+                                <EmptyState message="Loading..." />
+                            ) : likes.length === 0 ? (
+                                <EmptyState message="No likes yet" />
+                            ) : (
+                                <div className="space-y-4">
+                                    {likes.map((like, index) => {
+                                        if (like.type === "post") {
+                                            return (
+                                                <LikedContentCard
+                                                    key={`post-${index}`}
+                                                    type="post"
+                                                    data={like.data as Post}
+                                                />
+                                            );
+                                        }
                                         return (
                                             <LikedContentCard
-                                                key={`post-${index}`}
-                                                type="post"
-                                                data={like.data as Post}
+                                                key={`comment-${index}`}
+                                                type="comment"
+                                                data={like.data as Comment}
                                             />
                                         );
-                                    }
-                                    return (
-                                        <LikedContentCard
-                                            key={`comment-${index}`}
-                                            type="comment"
-                                            data={like.data as Comment}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        )}
+                                    })}
+                                </div>
+                            )}
+                        </WhenVisible>
                     </TabsContent>
                 </Tabs>
             </div>
