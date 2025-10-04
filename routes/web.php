@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ToggleLikeController;
 use App\Http\Controllers\UserController;
@@ -21,6 +22,8 @@ Route::get('/', function () {
 });
 
 // http://localhost:8000/1
+
+Route::get('/api/search', SearchController::class)->name('search');
 
 Route::get('/auth/register', [RegisterController::class, 'create'])->name('auth.register');
 Route::post('/auth/register', [RegisterController::class, 'store']);

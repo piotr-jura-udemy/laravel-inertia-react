@@ -25,6 +25,7 @@ import {
     ChevronDown,
 } from "lucide-react";
 import NotificationsPopover from "./notifications-popover";
+import { SearchCommand } from "./search-command";
 
 export default function AppHeader() {
     const { auth } = usePage<PageProps>().props;
@@ -39,12 +40,12 @@ export default function AppHeader() {
                 <nav className="flex items-center justify-between">
                     <AppHeaderLogo />
                     <div className="flex space-x-6 items-center">
+                        <SearchCommand />
                         {auth.user && (
                             <Button asChild>
                                 <Link href={create().url}>Add Post</Link>
                             </Button>
                         )}
-                        <AppHeaderLink href={index().url}>Posts</AppHeaderLink>
                         {auth.user && <NotificationsPopover />}
                         {auth.user ? (
                             <DropdownMenu>
