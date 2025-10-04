@@ -7,11 +7,23 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from "@/layouts/app-layout";
 import { Comment, Post, User } from "@/types";
-import { Calendar } from "lucide-react";
+import {
+    Calendar,
+    FileText,
+    MessageSquare,
+    Heart,
+    Loader2,
+} from "lucide-react";
 import PostCard from "@/components/post-card";
 import CommentCard from "@/components/comment-card";
 import LikedContentCard from "@/components/liked-content-card";
-import EmptyState from "@/components/empty-state";
+import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
 import { WhenVisible } from "@inertiajs/react";
 
 interface UserShowProps {
@@ -34,7 +46,7 @@ export default function UserShow({
         <AppLayout>
             <div>
                 {/* Profile Header */}
-                <Card className="rounded-none">
+                <Card>
                     <CardHeader>
                         <div className="flex items-center gap-3">
                             {/* Avatar Placeholder */}
@@ -71,12 +83,39 @@ export default function UserShow({
                     <TabsContent value="posts">
                         <WhenVisible
                             data="posts"
-                            fallback={<EmptyState message="Loading..." />}
+                            fallback={
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
+                            }
                         >
                             {!posts ? (
-                                <EmptyState message="Loading..." />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : posts.length === 0 ? (
-                                <EmptyState message="No posts yet" />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <FileText />
+                                        </EmptyMedia>
+                                        <EmptyTitle>No posts yet</EmptyTitle>
+                                        <EmptyDescription>
+                                            {profileUser.name} hasn't created
+                                            any posts yet.
+                                        </EmptyDescription>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : (
                                 <div className="space-y-4">
                                     {posts.map((post) => (
@@ -94,12 +133,39 @@ export default function UserShow({
                     <TabsContent value="replies">
                         <WhenVisible
                             data="comments"
-                            fallback={<EmptyState message="Loading..." />}
+                            fallback={
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
+                            }
                         >
                             {!comments ? (
-                                <EmptyState message="Loading..." />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : comments.length === 0 ? (
-                                <EmptyState message="No replies yet" />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <MessageSquare />
+                                        </EmptyMedia>
+                                        <EmptyTitle>No replies yet</EmptyTitle>
+                                        <EmptyDescription>
+                                            {profileUser.name} hasn't replied to
+                                            any posts yet.
+                                        </EmptyDescription>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : (
                                 <div className="space-y-4">
                                     {comments.map((comment) => (
@@ -117,12 +183,39 @@ export default function UserShow({
                     <TabsContent value="likes">
                         <WhenVisible
                             data="likes"
-                            fallback={<EmptyState message="Loading..." />}
+                            fallback={
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
+                            }
                         >
                             {!likes ? (
-                                <EmptyState message="Loading..." />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Loader2 className="animate-spin" />
+                                        </EmptyMedia>
+                                        <EmptyTitle>Loading...</EmptyTitle>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : likes.length === 0 ? (
-                                <EmptyState message="No likes yet" />
+                                <Empty>
+                                    <EmptyHeader>
+                                        <EmptyMedia variant="icon">
+                                            <Heart />
+                                        </EmptyMedia>
+                                        <EmptyTitle>No likes yet</EmptyTitle>
+                                        <EmptyDescription>
+                                            {profileUser.name} hasn't liked any
+                                            content yet.
+                                        </EmptyDescription>
+                                    </EmptyHeader>
+                                </Empty>
                             ) : (
                                 <div className="space-y-4">
                                     {likes.map((like, index) => {

@@ -18,7 +18,7 @@ use Inertia\Inertia;
 // http://localhost:8000 + /
 Route::get('/', function () {
     $posts = Post::with('user')
-        ->withCount('likes')
+        ->withCount(['likes', 'comments'])
         ->latest()
         ->take(10)
         ->get();

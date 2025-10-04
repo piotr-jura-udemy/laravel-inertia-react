@@ -3,7 +3,7 @@ import { Post, PostLikesData } from "@/types";
 import LikeButton from "./like-button";
 import { Deferred, Link } from "@inertiajs/react";
 import PostMeta from "./post-meta";
-import { Heart } from "lucide-react";
+import { Heart, MessageSquare } from "lucide-react";
 
 interface PostCardProps {
     post: Post;
@@ -88,9 +88,15 @@ export default function PostCard({
                         {post.body.substring(0, 200)}
                         {post.body.length > 200 && "..."}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Heart size={16} />
-                        <span>{post.likes_count ?? 0} likes</span>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
+                            <Heart size={16} />
+                            <span>{post.likes_count ?? 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <MessageSquare size={16} />
+                            <span>{post.comments_count ?? 0}</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -115,9 +121,15 @@ export default function PostCard({
                 <p className="text-sm text-muted-foreground line-clamp-2">
                     {post.body}
                 </p>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Heart size={14} className="text-gray-400" />
-                    <span>{post.likes_count ?? 0}</span>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                        <Heart size={14} />
+                        <span>{post.likes_count ?? 0}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <MessageSquare size={14} />
+                        <span>{post.comments_count ?? 0}</span>
+                    </div>
                 </div>
             </CardContent>
         </Card>

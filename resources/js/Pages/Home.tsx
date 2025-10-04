@@ -2,7 +2,14 @@ import AppLayout from "@/layouts/app-layout";
 import { Post } from "@/types";
 import { Link } from "@inertiajs/react";
 import PostCard from "@/components/post-card";
-import EmptyState from "@/components/empty-state";
+import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
+import { Pencil } from "lucide-react";
 
 interface HomeProps {
     posts: Post[];
@@ -24,7 +31,18 @@ export default function Home({ posts }: HomeProps) {
                     </Link>
                 </div>
                 {posts.length === 0 ? (
-                    <EmptyState message="No posts yet. Be the first to create one!" />
+                    <Empty>
+                        <EmptyHeader>
+                            <EmptyMedia variant="icon">
+                                <Pencil />
+                            </EmptyMedia>
+                            <EmptyTitle>No posts yet</EmptyTitle>
+                            <EmptyDescription>
+                                Be the first to create a post and share your
+                                thoughts with the community.
+                            </EmptyDescription>
+                        </EmptyHeader>
+                    </Empty>
                 ) : (
                     <div className="space-y-4">
                         {posts.map((post) => (

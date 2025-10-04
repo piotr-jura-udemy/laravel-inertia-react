@@ -20,7 +20,7 @@ class UserController extends Controller
             'posts' => Inertia::defer(fn() => PostResource::collection(
                 $user->posts()
                     ->with('user')
-                    ->withCount('likes')
+                    ->withCount(['likes', 'comments'])
                     ->latest()
                     ->get()
             )->toArray(request())),
