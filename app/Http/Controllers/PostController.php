@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,7 +20,7 @@ class PostController extends Controller
 
         switch ($view) {
             case 'followed':
-                if (!auth()->check()) {
+                if (! auth()->check()) {
                     abort(403, 'You must be logged in to view followed posts');
                 }
                 $followingIds = auth()->user()->following()->pluck('users.id');
@@ -50,10 +49,10 @@ class PostController extends Controller
 
         return Inertia::render('posts/show', [
             'post' => PostResource::make($post)->toArray(request()),
-            'comments' => Inertia::defer(fn() => CommentResource::collection(
+            'comments' => Inertia::defer(fn () => CommentResource::collection(
                 $post->comments()->with('user')->latest()->get()
             )->toArray(request())),
-            'likes' => Inertia::defer(fn() => $post->getLikesData())
+            'likes' => Inertia::defer(fn () => $post->getLikesData()),
         ]);
     }
 
@@ -66,12 +65,12 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
-            'body' => 'required|string|min:10|max:255'
+            'body' => 'required|string|min:10|max:255',
         ]);
 
         $post = Post::create([
             ...$validated,
-            'user_id' => $request->user()->id
+            'user_id' => $request->user()->id,
         ]);
 
         // Notify followers

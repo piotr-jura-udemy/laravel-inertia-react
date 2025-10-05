@@ -10,7 +10,7 @@ class ToggleLikeController extends Controller
 {
     public function __invoke(Request $request, string $type, int $id)
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
             abort(401);
         }
 
@@ -37,7 +37,7 @@ class ToggleLikeController extends Controller
                 ->delete();
         } else {
             $model->likes()->create([
-                'user_id' => $request->user()->id
+                'user_id' => $request->user()->id,
             ]);
 
             // Send notification to author (not for self-likes)

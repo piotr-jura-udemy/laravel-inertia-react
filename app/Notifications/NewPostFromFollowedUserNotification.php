@@ -14,8 +14,7 @@ class NewPostFromFollowedUserNotification extends Notification
     public function __construct(
         public User $author,
         public Post $post
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

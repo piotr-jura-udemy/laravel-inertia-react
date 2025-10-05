@@ -104,6 +104,7 @@ export function SearchCommand() {
         !loading && debouncedQuery.length >= 2 && !hasResults;
     const showLoadingState =
         loading && !hasResults && debouncedQuery.length >= 2;
+    const showInitialState = debouncedQuery.length < 2;
 
     return (
         <>
@@ -131,6 +132,12 @@ export function SearchCommand() {
                     onValueChange={setQuery}
                 />
                 <CommandList>
+                    {showInitialState && (
+                        <div className="py-6 text-center text-sm text-gray-500">
+                            Type at least 2 characters to start searching...
+                        </div>
+                    )}
+
                     {showLoadingState && (
                         <div className="py-6 text-center text-sm text-gray-500">
                             Searching...

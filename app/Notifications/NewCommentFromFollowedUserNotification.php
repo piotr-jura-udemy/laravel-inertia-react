@@ -14,8 +14,7 @@ class NewCommentFromFollowedUserNotification extends Notification
     public function __construct(
         public User $author,
         public Comment $comment
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

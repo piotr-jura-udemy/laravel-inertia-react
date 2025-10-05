@@ -12,8 +12,7 @@ class UserFollowedNotification extends Notification
 
     public function __construct(
         public User $follower
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

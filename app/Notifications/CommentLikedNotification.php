@@ -14,8 +14,7 @@ class CommentLikedNotification extends Notification
     public function __construct(
         public User $liker,
         public Comment $comment
-    ) {
-    }
+    ) {}
 
     public function via(object $notifiable): array
     {

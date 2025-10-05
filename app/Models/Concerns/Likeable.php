@@ -22,7 +22,7 @@ trait Likeable
             'count' => $this->likes()->count(),
             'user_has_liked' => $userId
                 ? $this->likes()->where('user_id', $userId)->exists()
-                : false
+                : false,
         ];
     }
 }

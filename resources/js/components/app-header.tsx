@@ -8,7 +8,7 @@ import {
     create as loginPage,
 } from "@/actions/App/Http/Controllers/Auth/LoginController";
 import { show as userProfile } from "@/actions/App/Http/Controllers/UserController";
-import { index as settingsIndex } from "@/actions/App/Http/Controllers/SettingsController";
+import { index as profileSettings } from "@/actions/App/Http/Controllers/ProfileSettingsController";
 import { PageProps } from "@/types";
 import {
     DropdownMenu,
@@ -82,7 +82,7 @@ export default function AppHeader() {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href={settingsIndex().url}
+                                            href={profileSettings().url}
                                             className="cursor-pointer"
                                         >
                                             <SettingsIcon />

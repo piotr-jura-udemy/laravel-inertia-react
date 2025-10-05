@@ -23,8 +23,8 @@ class CommentResource extends JsonResource
             'updated_at' => $this->updated_at->toISOString(),
             'post_id' => $this->post_id,
             'user_id' => $this->user_id,
-            'user' => $this->whenLoaded('user', fn() => UserResource::make($this->user)->toArray($request)),
-            'post' => $this->whenLoaded('post', fn() => PostResource::make($this->post)->toArray($request)),
+            'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)->toArray($request)),
+            'post' => $this->whenLoaded('post', fn () => PostResource::make($this->post)->toArray($request)),
             'likes_data' => $this->getLikesData($request),
         ];
     }

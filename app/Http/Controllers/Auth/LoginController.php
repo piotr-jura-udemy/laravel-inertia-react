@@ -21,12 +21,12 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|string|email',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'email' => 'These credentials do not match our records.'
+                'email' => 'These credentials do not match our records.',
             ]);
         }
 
@@ -45,4 +45,3 @@ class LoginController extends Controller
         return redirect('/');
     }
 }
-

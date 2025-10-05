@@ -21,26 +21,25 @@ class UserController extends Controller
             'profileUser' => UserResource::make($user)->additional([
                 'is_following' => $isFollowing,
             ])->toArray(request()),
-            'posts' => Inertia::defer(fn() => PostResource::collection(
+            'posts' => Inertia::defer(fn () => PostResource::collection(
                 $user->posts()
                     ->with('user')
                     ->withCount(['likes', 'comments'])
                     ->latest()
                     ->get()
             )->toArray(request())),
-            'comments' => Inertia::defer(fn() => CommentResource::collection(
+            'comments' => Inertia::defer(fn () => CommentResource::collection(
                 $user->comments()
                     ->with(['user', 'post'])
                     ->latest()
                     ->get()
             )->toArray(request())),
             'likes' => Inertia::defer(
-                fn() =>
-                $user->likes()
+                fn () => $user->likes()
                     ->with([
                         'likeable' => function ($query) {
                             $query->with('user');
-                        }
+                        },
                     ])
                     ->latest()
                     ->get()
@@ -68,4 +67,3 @@ class UserController extends Controller
         ]);
     }
 }
-

@@ -2,17 +2,15 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ToggleLikeController;
 use App\Http\Controllers\UserController;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Request -> Laravel -> http://localhost:8000 -> [Middleware 1] -> Route -> Response
 
@@ -46,8 +44,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/users/{id}/follow', [\App\Http\Controllers\FollowController::class, '__invoke'])->name('users.follow');
 
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::get('/settings', fn() => redirect('/settings/profile'));
+    Route::singleton('settings/profile', ProfileController::class);
+    Route::singleton('settings/billing', BillingController::class);
 
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
