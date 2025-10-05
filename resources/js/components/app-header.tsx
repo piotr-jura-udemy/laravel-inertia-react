@@ -1,5 +1,4 @@
 import { Link, usePage, router } from "@inertiajs/react";
-import AppHeaderLink from "./app-header-link";
 import AppHeaderLogo from "./app-header-logo";
 import { Button } from "./ui/button";
 import { create, index } from "@/actions/App/Http/Controllers/PostController";
@@ -8,7 +7,7 @@ import {
     create as loginPage,
 } from "@/actions/App/Http/Controllers/Auth/LoginController";
 import { show as userProfile } from "@/actions/App/Http/Controllers/UserController";
-import { index as profileSettings } from "@/actions/App/Http/Controllers/ProfileSettingsController";
+import { show as profileSettings } from "@/actions/App/Http/Controllers/ProfileController";
 import { PageProps } from "@/types";
 import {
     DropdownMenu,

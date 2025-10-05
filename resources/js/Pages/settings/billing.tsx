@@ -8,8 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageProps } from "@/types";
+import { Link } from "@inertiajs/react";
 
-export default function Billing({ auth }: PageProps) {
+interface BillingPageProps extends PageProps {
+    hasPaymentMethod: boolean;
+}
+
+export default function Billing({ auth, hasPaymentMethod }: BillingPageProps) {
     return (
         <SettingsLayout activeSection="billing">
             <Card>
@@ -23,16 +28,27 @@ export default function Billing({ auth }: PageProps) {
                     <div className="rounded-lg border p-4">
                         <h3 className="font-medium mb-2">Boost Your Posts</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                            Increase your post visibility by boosting them to
-                            reach more people.
+                            Increase your post visibility by boosting them for 7
+                            days. Go to any of your posts to boost them.
                         </p>
-                        <Button variant="outline">Coming Soon</Button>
+                        <Link href="/posts">
+                            <Button variant="outline">View My Posts</Button>
+                        </Link>
                     </div>
                     <div className="rounded-lg border p-4">
                         <h3 className="font-medium mb-2">Payment Method</h3>
-                        <p className="text-sm text-muted-foreground">
-                            No payment method added yet.
+                        <p className="text-sm text-muted-foreground mb-4">
+                            {hasPaymentMethod
+                                ? "You have a payment method on file."
+                                : "No payment method added yet. Add one when you make your first purchase."}
                         </p>
+                        {hasPaymentMethod && (
+                            <Link href="/billing/portal" method="get">
+                                <Button variant="outline">
+                                    Manage Billing
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </CardContent>
             </Card>

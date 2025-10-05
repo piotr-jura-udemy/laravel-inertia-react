@@ -13,7 +13,16 @@ class Post extends Model
 {
     use HasFactory, Likeable, Searchable;
 
-    protected $fillable = ['title', 'body', 'user_id'];
+    protected $fillable = ['title', 'body', 'user_id', 'is_boosted', 'boosted_at', 'boosted_until'];
+
+    protected function casts(): array
+    {
+        return [
+            'is_boosted' => 'boolean',
+            'boosted_at' => 'datetime',
+            'boosted_until' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {

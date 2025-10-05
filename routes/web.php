@@ -23,12 +23,12 @@ Route::get('/', function () {
 
 Route::get('/api/search', SearchController::class)->name('search');
 
-Route::get('/auth/register', [RegisterController::class, 'create'])->name('auth.register');
+Route::get('/auth/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/auth/register', [RegisterController::class, 'store']);
 
-Route::get('/auth/login', [LoginController::class, 'create'])->name('auth.login');
+Route::get('/auth/login', [LoginController::class, 'create'])->name('login');
 Route::post('/auth/login', [LoginController::class, 'store']);
-Route::post('/auth/logout', [LoginController::class, 'destroy']);
+Route::post('/auth/logout', [LoginController::class, 'destroy'])->name('logout');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
@@ -47,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', fn() => redirect('/settings/profile'));
     Route::singleton('settings/profile', ProfileController::class);
     Route::singleton('settings/billing', BillingController::class);
+
+    Route::post('/posts/{post}/boost/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
+    Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
+    Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
 
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');

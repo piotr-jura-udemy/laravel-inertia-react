@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Post, PostLikesData } from "@/types";
 import LikeButton from "./like-button";
-import { Deferred, Link } from "@inertiajs/react";
+import { Deferred, Link, router, usePage } from "@inertiajs/react";
 import PostMeta from "./post-meta";
-import { Heart, MessageSquare } from "lucide-react";
+import { Heart, MessageSquare, Zap } from "lucide-react";
+import { Button } from "./ui/button";
+import { PageProps } from "@/types";
 
 interface PostCardProps {
     post: Post;
@@ -20,6 +22,13 @@ export default function PostCard({
     showLikeButton = true,
     className,
 }: PostCardProps) {
+    const { auth } = usePage<PageProps>().props;
+    const isOwner = auth.user?.id === post.user_id;
+
+    const handleBoost = () => {
+        router.post(`/posts/${post.id}/boost/checkout`);
+    };
+
     const titleLink =
         variant !== "full" ? (
             <Link href={`/posts/${post.id}`} className="hover:underline">
@@ -34,7 +43,15 @@ export default function PostCard({
         return (
             <Card className={className}>
                 <CardHeader className="space-y-2">
-                    <CardTitle className="text-2xl">{titleLink}</CardTitle>
+                    <div className="flex items-start justify-between">
+                        <CardTitle className="text-2xl">{titleLink}</CardTitle>
+                        {post.is_boosted && (
+                            <span className="flex items-center gap-1 text-sm font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                                <Zap size={14} className="fill-amber-600" />
+                                Boosted
+                            </span>
+                        )}
+                    </div>
                     <PostMeta
                         userId={post.user_id}
                         userName={post.user?.name || "Unknown"}
@@ -42,30 +59,43 @@ export default function PostCard({
                     />
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p className="text-gray-700 whitespace-pre-wrap">
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                         {post.body}
                     </p>
-                    {showLikeButton && likes && (
-                        <Deferred
-                            data="likes"
-                            fallback={
+                    <div className="flex items-center gap-3">
+                        {showLikeButton && (
+                            <Deferred
+                                data="likes"
+                                fallback={
+                                    <LikeButton
+                                        type="posts"
+                                        id={post.id}
+                                        count={likes?.count}
+                                        liked={likes?.user_has_liked}
+                                        isLoading={!likes}
+                                    />
+                                }
+                            >
                                 <LikeButton
                                     type="posts"
                                     id={post.id}
                                     count={likes?.count}
                                     liked={likes?.user_has_liked}
-                                    isLoading={!likes}
                                 />
-                            }
-                        >
-                            <LikeButton
-                                type="posts"
-                                id={post.id}
-                                count={likes?.count}
-                                liked={likes?.user_has_liked}
-                            />
-                        </Deferred>
-                    )}
+                            </Deferred>
+                        )}
+                        {isOwner && !post.is_boosted && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleBoost}
+                                className="gap-1.5"
+                            >
+                                <Zap size={14} />
+                                Boost Post
+                            </Button>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
         );

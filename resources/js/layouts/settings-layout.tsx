@@ -2,6 +2,8 @@ import AppLayout from "@/layouts/app-layout";
 import { Link } from "@inertiajs/react";
 import { User, CreditCard } from "lucide-react";
 import { ReactNode } from "react";
+import profile from "@/routes/profile";
+import billing from "@/routes/billing";
 
 interface SettingsLayoutProps {
     children: ReactNode;
@@ -17,13 +19,13 @@ export default function SettingsLayout({
             id: "profile" as const,
             label: "Profile Settings",
             icon: User,
-            href: route("profile.show"),
+            href: profile.show.url(),
         },
         {
             id: "billing" as const,
             label: "Billing",
             icon: CreditCard,
-            href: route("billing.show"),
+            href: billing.show.url(),
         },
     ];
 

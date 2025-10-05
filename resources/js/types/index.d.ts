@@ -10,6 +10,9 @@ export interface Post {
     likes?: Like[];
     likes_count?: number;
     comments_count?: number;
+    is_boosted?: boolean;
+    boosted_at?: string | null;
+    boosted_until?: string | null;
 }
 
 export interface User {
