@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/boost/checkout', [BillingController::class, 'checkout'])->name('billing.checkout');
     Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
     Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
+    Route::get('/billing/invoices/{invoiceId}', [BillingController::class, 'downloadInvoice'])->name('billing.invoice');
 
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');

@@ -8,28 +8,39 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Cashier\Cashier;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class BillingController extends Controller
 {
     public function show(): Response
     {
+        $user = auth()->user();
+
         return Inertia::render('settings/billing', [
-            'hasPaymentMethod' => auth()->user()->hasPaymentMethod(),
+            'hasPaymentMethod' => $user->hasPaymentMethod(),
+            'invoices' => $user->invoices()->map(fn($invoice) => [
+                'id' => $invoice->id,
+                'date' => $invoice->date()->toFormattedDateString(),
+                'total' => $invoice->total(),
+                'status' => $invoice->status,
+            ]),
         ]);
     }
 
-    public function checkout(Post $post): RedirectResponse
+    public function checkout(Post $post): SymfonyResponse
     {
         // Redirect to Stripe Checkout for a one-time payment
-        return auth()->user()
+        $checkout = auth()->user()
             ->checkout(config('services.stripe.boost_price'), [
                 'success_url' => route('billing.success') . '?session_id={CHECKOUT_SESSION_ID}&post_id=' . $post->id,
                 'cancel_url' => route('billing.show'),
+                'invoice_creation' => ['enabled' => true],
                 'metadata' => [
                     'post_id' => $post->id,
                 ],
-            ])
-            ->redirect();
+            ]);
+
+        return Inertia::location($checkout->url);
     }
 
     public function success(Request $request): RedirectResponse
@@ -61,5 +72,10 @@ class BillingController extends Controller
     {
         // Redirect to Stripe's customer billing portal
         return auth()->user()->redirectToBillingPortal(route('billing.show'));
+    }
+
+    public function downloadInvoice(Request $request, string $invoiceId): SymfonyResponse
+    {
+        return $request->user()->downloadInvoice($invoiceId);
     }
 }

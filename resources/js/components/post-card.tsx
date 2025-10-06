@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Post, PostLikesData } from "@/types";
 import LikeButton from "./like-button";
-import { Deferred, Link, usePage } from "@inertiajs/react";
+import { Deferred, Link, router, usePage } from "@inertiajs/react";
 import PostMeta from "./post-meta";
 import { Heart, MessageSquare, Zap } from "lucide-react";
 import { Button } from "./ui/button";
@@ -25,7 +25,10 @@ export default function PostCard({
     const page = usePage<PageProps>();
     const { auth } = page.props;
     const isOwner = auth.user?.id === post.user_id;
-    const csrfToken = (page.props as any).csrf_token || "";
+
+    const handleBoost = () => {
+        router.post(`/posts/${post.id}/boost/checkout`);
+    };
 
     const titleLink =
         variant !== "full" ? (
@@ -94,25 +97,15 @@ export default function PostCard({
                                     </span>
                                 </div>
                             ) : (
-                                <form
-                                    method="POST"
-                                    action={`/posts/${post.id}/boost/checkout`}
+                                <Button
+                                    onClick={handleBoost}
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1.5"
                                 >
-                                    <input
-                                        type="hidden"
-                                        name="_token"
-                                        value={csrfToken}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        variant="outline"
-                                        size="sm"
-                                        className="gap-1.5"
-                                    >
-                                        <Zap size={14} />
-                                        Boost Post
-                                    </Button>
-                                </form>
+                                    <Zap size={14} />
+                                    Boost Post
+                                </Button>
                             ))}
                     </div>
                 </CardContent>
