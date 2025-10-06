@@ -21,14 +21,15 @@ class BillingController extends Controller
     public function checkout(Post $post): RedirectResponse
     {
         // Redirect to Stripe Checkout for a one-time payment
-        // You need to create this price in your Stripe Dashboard
-        return auth()->user()->checkout('price_post_boost', [
-            'success_url' => route('billing.success') . '?session_id={CHECKOUT_SESSION_ID}&post_id=' . $post->id,
-            'cancel_url' => route('settings.billing.show'),
-            'metadata' => [
-                'post_id' => $post->id,
-            ],
-        ]);
+        return auth()->user()
+            ->checkout(config('services.stripe.boost_price'), [
+                'success_url' => route('billing.success') . '?session_id={CHECKOUT_SESSION_ID}&post_id=' . $post->id,
+                'cancel_url' => route('billing.show'),
+                'metadata' => [
+                    'post_id' => $post->id,
+                ],
+            ])
+            ->redirect();
     }
 
     public function success(Request $request): RedirectResponse
@@ -53,12 +54,12 @@ class BillingController extends Controller
             }
         }
 
-        return redirect()->route('settings.billing.show')->with('success', 'Post boosted successfully!');
+        return redirect()->route('billing.show')->with('success', 'Post boosted successfully!');
     }
 
     public function portal(): RedirectResponse
     {
         // Redirect to Stripe's customer billing portal
-        return auth()->user()->redirectToBillingPortal(route('settings.billing.show'));
+        return auth()->user()->redirectToBillingPortal(route('billing.show'));
     }
 }

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Post, PostLikesData } from "@/types";
 import LikeButton from "./like-button";
-import { Deferred, Link, router, usePage } from "@inertiajs/react";
+import { Deferred, Link, usePage } from "@inertiajs/react";
 import PostMeta from "./post-meta";
 import { Heart, MessageSquare, Zap } from "lucide-react";
 import { Button } from "./ui/button";
@@ -22,12 +22,10 @@ export default function PostCard({
     showLikeButton = true,
     className,
 }: PostCardProps) {
-    const { auth } = usePage<PageProps>().props;
+    const page = usePage<PageProps>();
+    const { auth } = page.props;
     const isOwner = auth.user?.id === post.user_id;
-
-    const handleBoost = () => {
-        router.post(`/posts/${post.id}/boost/checkout`);
-    };
+    const csrfToken = (page.props as any).csrf_token || "";
 
     const titleLink =
         variant !== "full" ? (
@@ -84,17 +82,38 @@ export default function PostCard({
                                 />
                             </Deferred>
                         )}
-                        {isOwner && !post.is_boosted && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleBoost}
-                                className="gap-1.5"
-                            >
-                                <Zap size={14} />
-                                Boost Post
-                            </Button>
-                        )}
+                        {isOwner &&
+                            (post.is_boosted ? (
+                                <div className="flex items-center gap-1.5 text-sm text-amber-600">
+                                    <Zap size={14} className="fill-amber-600" />
+                                    <span>
+                                        Boosted until{" "}
+                                        {new Date(
+                                            post.boosted_until!
+                                        ).toLocaleDateString()}
+                                    </span>
+                                </div>
+                            ) : (
+                                <form
+                                    method="POST"
+                                    action={`/posts/${post.id}/boost/checkout`}
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        value={csrfToken}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1.5"
+                                    >
+                                        <Zap size={14} />
+                                        Boost Post
+                                    </Button>
+                                </form>
+                            ))}
                     </div>
                 </CardContent>
             </Card>

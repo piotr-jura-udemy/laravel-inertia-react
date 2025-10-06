@@ -20,19 +20,31 @@ class PostController extends Controller
 
         switch ($view) {
             case 'followed':
-                if (! auth()->check()) {
-                    abort(403, 'You must be logged in to view followed posts');
+                if (auth()->check()) {
+                    $followingIds = auth()->user()->following()->pluck('users.id');
+                    $query->whereIn('user_id', $followingIds);
+                } else {
+                    // Return empty result for unauthenticated users
+                    $query->whereRaw('1 = 0');
                 }
-                $followingIds = auth()->user()->following()->pluck('users.id');
-                $query->whereIn('user_id', $followingIds);
                 break;
             case 'popular':
                 $query->where('created_at', '>=', now()->subDays(7))
                     ->orderByDesc('likes_count');
                 break;
             default:
-                $query->latest();
+                // Default ordering handled below
                 break;
+        }
+
+        // Always show boosted posts first across all views
+        $query->orderByDesc('is_boosted');
+
+        // Apply secondary ordering based on view
+        if ($view === 'popular') {
+            $query->orderByDesc('likes_count');
+        } else {
+            $query->latest();
         }
 
         $posts = $query->get();
@@ -49,10 +61,10 @@ class PostController extends Controller
 
         return Inertia::render('posts/show', [
             'post' => PostResource::make($post)->toArray(request()),
-            'comments' => Inertia::defer(fn () => CommentResource::collection(
+            'comments' => Inertia::defer(fn() => CommentResource::collection(
                 $post->comments()->with('user')->latest()->get()
             )->toArray(request())),
-            'likes' => Inertia::defer(fn () => $post->getLikesData()),
+            'likes' => Inertia::defer(fn() => $post->getLikesData()),
         ]);
     }
 

@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { Post } from "@/types";
+import { PageProps, Post } from "@/types";
 import PostCard from "@/components/post-card";
 import {
     Empty,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/empty";
 import { FileText } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 interface PostsIndexProps {
     posts: Post[];
@@ -21,6 +21,7 @@ export default function PostsIndex({
     posts,
     currentView = "all",
 }: PostsIndexProps) {
+    const { auth } = usePage<PageProps>().props;
     const handleViewChange = (view: string) => {
         router.get("/posts", { view }, { preserveState: true });
     };
@@ -31,7 +32,9 @@ export default function PostsIndex({
                 <Tabs value={currentView} onValueChange={handleViewChange}>
                     <TabsList>
                         <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="followed">Followed</TabsTrigger>
+                        {auth.user && (
+                            <TabsTrigger value="followed">Followed</TabsTrigger>
+                        )}
                         <TabsTrigger value="popular">Popular</TabsTrigger>
                     </TabsList>
                 </Tabs>
