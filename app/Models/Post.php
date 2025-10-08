@@ -2,16 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Likeable, Searchable;
 
-    protected $fillable = ['title', 'body', 'user_id'];
+    protected $fillable = ['title', 'body', 'user_id', 'is_boosted', 'boosted_at', 'boosted_until'];
+
+    protected function casts(): array
+    {
+        return [
+            'is_boosted' => 'boolean',
+            'boosted_at' => 'datetime',
+            'boosted_until' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {
@@ -23,8 +34,13 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function likes(): HasMany
+    public function toSearchableArray(): array
     {
-        return $this->hasMany(Like::class);
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' => $this->body,
+            'user_name' => $this->user->name,
+        ];
     }
 }

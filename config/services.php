@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'boost_price' => env('STRIPE_BOOST_PRICE'),
+    ],
+
 ];

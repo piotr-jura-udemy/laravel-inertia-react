@@ -1,39 +1,53 @@
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
-import PostToggleLike from "@/actions/App/Http/Controllers/PostToggleLike";
+import { router, usePage } from "@inertiajs/react";
+import { create as loginPage } from "@/actions/App/Http/Controllers/Auth/LoginController";
 import { toast } from "sonner";
+import { PageProps } from "@/types";
 
 interface LikeButtonProps {
-    postId: number;
+    type: "posts" | "comments";
+    id: number;
     count?: number;
     liked?: boolean;
     isLoading?: boolean;
 }
 
 export default function LikeButton({
-    postId,
+    type,
+    id,
     count = 0,
     liked = false,
     isLoading: externalLoading = false,
 }: LikeButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     const disabled = isLoading || externalLoading;
+    const { auth } = usePage<PageProps>().props;
 
     const handleToggleLike = () => {
-        // TODO: Implement like toggle logic
         if (disabled) return;
 
+        if (!auth.user) {
+            router.visit(loginPage().url);
+            return;
+        }
+
+        const itemName = type === "posts" ? "Post" : "Comment";
+
         router.post(
-            PostToggleLike(postId),
+            `/${type}/${id}/likes/toggle`,
             {},
             {
+                preserveScroll: true,
                 onStart: () => setIsLoading(true),
-                onSuccess: () => toast(liked ? "Post unliked!" : "Post liked!"),
+                onSuccess: () =>
+                    toast(
+                        liked ? `${itemName} unliked!` : `${itemName} liked!`
+                    ),
                 onError: () => toast("Failed to update like"),
                 onFinish: () => setIsLoading(false),
-                only: ["likes"],
+                only: ["likes", "comments"],
             }
         );
     };

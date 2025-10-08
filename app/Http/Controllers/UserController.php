@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class UserController extends Controller
+{
+    public function show(string $id): Response
+    {
+        $user = User::withCount(['followers', 'following'])->findOrFail($id);
+
+        $isFollowing = auth()->check() ? auth()->user()->isFollowing($user) : false;
+
+        return Inertia::render('users/show', [
+            'profileUser' => UserResource::make($user)->additional([
+                'is_following' => $isFollowing,
+            ])->toArray(request()),
+            'posts' => Inertia::defer(fn () => PostResource::collection(
+                $user->posts()
+                    ->with('user')
+                    ->withCount(['likes', 'comments'])
+                    ->latest()
+                    ->get()
+            )->toArray(request())),
+            'comments' => Inertia::defer(fn () => CommentResource::collection(
+                $user->comments()
+                    ->with(['user', 'post'])
+                    ->latest()
+                    ->get()
+            )->toArray(request())),
+            'likes' => Inertia::defer(
+                fn () => $user->likes()
+                    ->with([
+                        'likeable' => function ($query) {
+                            $query->with('user');
+                        },
+                    ])
+                    ->latest()
+                    ->get()
+                    ->map(function ($like) {
+                        $likeable = $like->likeable;
+
+                        if ($like->likeable_type === 'App\\Models\\Post') {
+                            return [
+                                'type' => 'post',
+                                'data' => PostResource::make($likeable->loadCount('likes'))->toArray(request()),
+                            ];
+                        } elseif ($like->likeable_type === 'App\\Models\\Comment') {
+                            return [
+                                'type' => 'comment',
+                                'data' => CommentResource::make($likeable->load('post'))->toArray(request()),
+                            ];
+                        }
+
+                        return null;
+                    })
+                    ->filter()
+                    ->values()
+                    ->toArray()
+            ),
+        ]);
+    }
+}
