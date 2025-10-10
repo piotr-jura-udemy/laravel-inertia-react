@@ -6,6 +6,7 @@ import { create, index } from "@/actions/App/Http/Controllers/PostController";
 import home from "@/routes/home";
 import about from "@/routes/about";
 import { PageProps } from "@/types";
+import { create as loginPage } from "@/actions/App/Http/Controllers/Auth/LoginController";
 
 export default function AppHeader() {
     const { user } = usePage<PageProps>().props;
@@ -27,7 +28,13 @@ export default function AppHeader() {
                         </AppHeaderLink>
                         <AppHeaderLink href={index().url}>Posts</AppHeaderLink>
 
-                        <div>{user?.name}</div>
+                        {user ? (
+                            <div>dropdown</div>
+                        ) : (
+                            <Button asChild>
+                                <Link href={loginPage().url}>Sign In</Link>
+                            </Button>
+                        )}
                     </div>
                 </nav>
             </div>
