@@ -29,7 +29,7 @@ Route::post('/auth/register', [RegisterController::class, 'store']);
 
 Route::get('/auth/login', [LoginController::class, 'create']);
 Route::post('/auth/login', [LoginController::class, 'store']);
-Route::post('/auth/logout', [LoginController::class, 'destroy']);
+Route::delete('/auth/logout', [LoginController::class, 'destroy']);
 
 Route::post('/posts/{post}/likes/toggle', PostToggleLike::class);
 
