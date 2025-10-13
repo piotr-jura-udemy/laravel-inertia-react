@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +14,7 @@ class PostController extends Controller
     {
         // likes_count
         return Inertia::render('posts/index', [
-            'posts' => Post::with('user')->withCount('likes')->latest()->get()
+            'posts' => Post::with('user')->withCount('likes')->latest()->get(),
         ]);
     }
 
@@ -23,23 +22,24 @@ class PostController extends Controller
     public function show(string $id): Response
     {
         $post = Post::with('user')->findOrFail($id);
+
         return Inertia::render('posts/show', [
             'post' => $post,
             'comments' => Inertia::defer(
-                fn() => $post->comments()
+                fn () => $post->comments()
                     ->with('user')
                     ->latest()
                     ->get()
             ),
             'likes' => Inertia::defer(
-                fn() => [
+                fn () => [
                     'count' => $post->likes()->count(),
                     'user_has_liked' => $post->likes()->where([
                         'ip_address' => request()->ip(),
-                        'user_agent' => request()->userAgent()
-                    ])->exists()
+                        'user_agent' => request()->userAgent(),
+                    ])->exists(),
                 ]
-            )
+            ),
         ]);
     }
 
@@ -52,12 +52,12 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
-            'body' => 'required|string|min:10|max:255'
+            'body' => 'required|string|min:10|max:255',
         ]);
 
         Post::create([
             ...$validated,
-            'user_id' => User::inRandomOrder()->first()->id
+            'user_id' => $request->user(),
         ]);
 
         return redirect('/posts');
