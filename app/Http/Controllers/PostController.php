@@ -26,18 +26,17 @@ class PostController extends Controller
         return Inertia::render('posts/show', [
             'post' => $post,
             'comments' => Inertia::defer(
-                fn () => $post->comments()
+                fn() => $post->comments()
                     ->with('user')
                     ->latest()
                     ->get()
             ),
             'likes' => Inertia::defer(
-                fn () => [
+                fn() => [
                     'count' => $post->likes()->count(),
-                    'user_has_liked' => $post->likes()->where([
-                        'ip_address' => request()->ip(),
-                        'user_agent' => request()->userAgent(),
-                    ])->exists(),
+                    'user_has_liked' => auth()->check()
+                        ? $post->likes()->where('user_id', auth()->id())->exists()
+                        : false,
                 ]
             ),
         ]);
