@@ -15,7 +15,12 @@ class PostController extends Controller
     {
         // likes_count
         return Inertia::render('posts/index', [
-            'posts' => Post::with('user')->withCount('likes')->latest()->get(),
+            'posts' => Inertia::scroll(
+                fn () => Post::with('user')
+                    ->withCount('likes')
+                    ->latest()
+                    ->cursorPaginate()
+            ),
         ]);
     }
 
