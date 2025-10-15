@@ -33,8 +33,8 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
 
-            $table->string('ip_address');
-            $table->text('user_agent');
+            $table->string('ip_address')->nullable();
+            $table->text('user_agent')->nullable();
 
             // Ensure one like per IP/user agent combination per post
             $table->unique(['post_id', 'ip_address', 'user_agent']);

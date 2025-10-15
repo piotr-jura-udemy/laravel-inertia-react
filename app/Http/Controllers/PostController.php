@@ -19,7 +19,7 @@ class PostController extends Controller
                 fn () => Post::with('user')
                     ->withCount('likes')
                     ->latest()
-                    ->cursorPaginate()
+                    ->cursorPaginate(10)
             ),
         ]);
     }
