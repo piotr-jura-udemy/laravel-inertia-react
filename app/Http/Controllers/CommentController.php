@@ -16,7 +16,7 @@ class CommentController extends Controller
         $validated = $request->validated();
         Comment::create([
             ...$validated,
-            'user_id' => $request->user(),
+            'user_id' => $request->user()->id,
         ]);
 
         return redirect()->back();

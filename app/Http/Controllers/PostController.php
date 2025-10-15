@@ -56,7 +56,7 @@ class PostController extends Controller
 
         Post::create([
             ...$validated,
-            'user_id' => $request->user(),
+            'user_id' => $request->user()->id,
         ]);
 
         return redirect('/posts');
