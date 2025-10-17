@@ -34,9 +34,8 @@ export default function CommentForm({
                     action={store()}
                     className="space-y-4"
                     resetOnSuccess
-                    onSuccess={() => onCommentAdded?.()}
-                    options={{
-                        only: ["comments"],
+                    onSuccess={() => {
+                        onCommentAdded?.();
                     }}
                 >
                     {({ errors, processing }) => (

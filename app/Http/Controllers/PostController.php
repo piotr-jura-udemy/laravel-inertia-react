@@ -31,12 +31,13 @@ class PostController extends Controller
 
         return Inertia::render('posts/show', [
             'post' => $post,
-            'comments' => Inertia::defer(
+            'comments' => Inertia::scroll(
                 fn () => $post->comments()
                     ->with('user')
                     ->latest()
-                    ->get()
+                    ->cursorPaginate(3)
             ),
+            'comments_count' => Inertia::defer(fn () => $post->comments()->count()),
             'likes' => Inertia::defer(
                 fn () => [
                     'count' => $post->likes()->count(),
