@@ -10,7 +10,7 @@ import { create as loginPage } from "@/actions/App/Http/Controllers/Auth/LoginCo
 import UserDropdown from "./user-dropdown";
 
 export default function AppHeader() {
-    const { user } = usePage<PageProps>().props;
+    const { auth } = usePage<PageProps>().props;
 
     return (
         <header>
@@ -18,9 +18,11 @@ export default function AppHeader() {
                 <nav className="flex items-center justify-between">
                     <AppHeaderLogo />
                     <div className="flex space-x-6 items-center">
-                        <Button>
-                            <Link href={create()}>Add Post</Link>
-                        </Button>
+                        {auth.can.post.create && (
+                            <Button>
+                                <Link href={create()}>Add Post</Link>
+                            </Button>
+                        )}
                         <AppHeaderLink href={home.index().url}>
                             Home
                         </AppHeaderLink>
@@ -29,7 +31,7 @@ export default function AppHeader() {
                         </AppHeaderLink>
                         <AppHeaderLink href={index().url}>Posts</AppHeaderLink>
 
-                        {user ? (
+                        {auth.user ? (
                             <UserDropdown />
                         ) : (
                             <Button asChild>
