@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,7 +17,7 @@ class PostController extends Controller
         // likes_count
         return Inertia::render('posts/index', [
             'posts' => Inertia::scroll(
-                fn () => Post::with('user')
+                fn() => Post::with('user')
                     ->withCount('likes')
                     ->latest()
                     ->cursorPaginate(10)
@@ -25,24 +26,31 @@ class PostController extends Controller
     }
 
     // index, show, edit, update...
-    public function show(string $id): Response
+    public function show(Post $post): Response
     {
-        $post = Post::with('user')->findOrFail($id);
+        $post->load('user');
 
         return Inertia::render('posts/show', [
             'post' => $post,
+            'can_update' => Auth::check() && Gate::allows('update', $post),
+            'can_delete' => Auth::check() && Gate::allows('delete', $post),
             'comments' => Inertia::scroll(
-                fn () => $post->comments()
+                fn() => $post->comments()
                     ->with('user')
                     ->latest()
                     ->cursorPaginate(3)
             ),
-            'comments_count' => Inertia::defer(fn () => $post->comments()->count()),
+            'comments_count' => Inertia::defer(
+                fn() => $post->comments()->count()
+            ),
             'likes' => Inertia::defer(
-                fn () => [
+                fn() => [
                     'count' => $post->likes()->count(),
                     'user_has_liked' => Auth::check() ?
-                        $post->likes()->where('user_id', Auth::id())->exists() : false,
+                        $post->likes()->where(
+                            'user_id',
+                            Auth::id()
+                        )->exists() : false,
                 ]
             ),
         ]);
@@ -64,6 +72,38 @@ class PostController extends Controller
             ...$validated,
             'user_id' => $request->user()->id,
         ]);
+
+        return redirect('/posts');
+    }
+
+    public function edit(Post $post): Response
+    {
+        Gate::authorize('update', $post);
+
+        return Inertia::render('posts/edit', [
+            'post' => $post,
+        ]);
+    }
+
+    public function update(Request $request, Post $post): RedirectResponse
+    {
+        Gate::authorize('update', $post);
+
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:255',
+            'body' => 'required|string|min:10|max:255',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->route('posts.show', $post);
+    }
+
+    public function destroy(Post $post): RedirectResponse
+    {
+        Gate::authorize('delete', $post);
+
+        $post->delete();
 
         return redirect('/posts');
     }

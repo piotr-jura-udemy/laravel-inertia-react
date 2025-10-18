@@ -19,6 +19,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import CommentList from "@/components/comment-list";
 import LikeButton from "@/components/like-button";
+import PostActionsMenu from "@/components/post-actions-menu";
 
 interface PostsShowProps {
     post: Post;
@@ -27,6 +28,8 @@ interface PostsShowProps {
     };
     likes: PostLikesData;
     comments_count?: number;
+    can_update: boolean;
+    can_delete: boolean;
 }
 
 export default function PostsShow({
@@ -34,6 +37,8 @@ export default function PostsShow({
     comments,
     likes,
     comments_count,
+    can_update,
+    can_delete,
 }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
     // useState - displayed on the page
@@ -101,11 +106,24 @@ export default function PostsShow({
                 {/* Post Content */}
                 <Card className="rounded-none">
                     <CardHeader>
-                        <CardTitle className="text-2xl">{post.title}</CardTitle>
-                        <CardDescription>
-                            By {post.user?.name} on{" "}
-                            {new Date(post.created_at).toLocaleDateString()}
-                        </CardDescription>
+                        <div className="flex items-start justify-between">
+                            <div className="space-y-1.5">
+                                <CardTitle className="text-2xl">
+                                    {post.title}
+                                </CardTitle>
+                                <CardDescription>
+                                    By {post.user?.name} on{" "}
+                                    {new Date(
+                                        post.created_at
+                                    ).toLocaleDateString()}
+                                </CardDescription>
+                            </div>
+                            <PostActionsMenu
+                                postId={post.id}
+                                canUpdate={can_update}
+                                canDelete={can_delete}
+                            />
+                        </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-gray-700 whitespace-pre-wrap">
