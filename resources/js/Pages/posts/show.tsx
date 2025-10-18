@@ -27,6 +27,7 @@ interface PostsShowProps {
     };
     likes: PostLikesData;
     comments_count?: number;
+    can_edit: boolean;
 }
 
 export default function PostsShow({
@@ -34,6 +35,7 @@ export default function PostsShow({
     comments,
     likes,
     comments_count,
+    can_edit,
 }: PostsShowProps) {
     const commentsSectionRef = useRef<HTMLDivElement>(null);
     // useState - displayed on the page
@@ -101,7 +103,11 @@ export default function PostsShow({
                 {/* Post Content */}
                 <Card className="rounded-none">
                     <CardHeader>
-                        <CardTitle className="text-2xl">{post.title}</CardTitle>
+                        <CardTitle className="text-2xl">
+                            {post.title}
+
+                            {can_edit ? " (can edit)" : " (cannot edit)"}
+                        </CardTitle>
                         <CardDescription>
                             By {post.user?.name} on{" "}
                             {new Date(post.created_at).toLocaleDateString()}

@@ -31,6 +31,7 @@ class PostController extends Controller
 
         return Inertia::render('posts/show', [
             'post' => $post,
+            'can_edit' => Auth::check() && Auth::user()->can('update', $post),
             'comments' => Inertia::scroll(
                 fn () => $post->comments()
                     ->with('user')
