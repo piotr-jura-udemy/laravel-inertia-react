@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,11 +52,15 @@ class PostController extends Controller
 
     public function create(): Response
     {
+        Gate::authorize('create', Post::class);
+
         return Inertia::render('posts/create');
     }
 
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('create', Post::class);
+
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
             'body' => 'required|string|min:10|max:255',
