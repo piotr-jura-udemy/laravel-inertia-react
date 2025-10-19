@@ -35,7 +35,10 @@ Route::post('/posts/{post}/likes/toggle', PostToggleLike::class)->middleware('au
 
 Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth');
 Route::get('/posts', [PostController::class, 'index']);
-Route::get('/posts/{id}', [PostController::class, 'show']);
+Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 Route::post('/posts', [PostController::class, 'store'])->middleware('auth');
+
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
 Route::post('/comments', [CommentController::class, 'store'])->middleware('auth');

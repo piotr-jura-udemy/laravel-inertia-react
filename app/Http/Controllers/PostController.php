@@ -75,4 +75,25 @@ class PostController extends Controller
 
         return redirect('/posts');
     }
+
+    public function edit(Post $post): Response
+    {
+        Gate::authorize('update', $post);
+
+        return Inertia::render('posts/edit', ['post' => $post]);
+    }
+
+    public function update(Request $request, Post $post): RedirectResponse
+    {
+        Gate::authorize('update', $post);
+
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:255',
+            'body' => 'required|string|min:10|max:255',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->route('posts.show', $post);
+    }
 }
