@@ -30,6 +30,7 @@ interface PostsShowProps {
     comments_count?: number;
     can: {
         update: boolean;
+        delete: boolean;
     };
 }
 
@@ -111,10 +112,6 @@ export default function PostsShow({
                                 {" "}
                                 <CardTitle className="text-2xl">
                                     {post.title}
-
-                                    {can.update
-                                        ? " (can edit)"
-                                        : " (cannot edit)"}
                                 </CardTitle>
                                 <CardDescription>
                                     By {post.user?.name} on{" "}
@@ -126,7 +123,7 @@ export default function PostsShow({
                             <PostActionsDropdown
                                 postId={post.id}
                                 canUpdate={can.update}
-                                canDelete={false}
+                                canDelete={can.delete}
                             />
                         </div>
                     </CardHeader>

@@ -1,4 +1,4 @@
-import { MoreVertical, Pencil } from "lucide-react";
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
     DropdownMenu,
@@ -6,8 +6,20 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Link } from "@inertiajs/react";
-import { edit } from "@/actions/App/Http/Controllers/PostController";
+import { Link, router } from "@inertiajs/react";
+import { destroy, edit } from "@/actions/App/Http/Controllers/PostController";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "./ui/alert-dialog";
+import { toast } from "sonner";
 
 interface PostActionsDropdownProps {
     postId: number;
@@ -20,6 +32,10 @@ export default function PostActionsDropdown({
     canDelete,
     canUpdate,
 }: PostActionsDropdownProps) {
+    const handleDelete = () => {
+        router.delete(destroy(postId));
+    };
+
     if (!canUpdate && !canDelete) {
         return null;
     }
@@ -39,6 +55,36 @@ export default function PostActionsDropdown({
                             Edit Post
                         </Link>
                     </DropdownMenuItem>
+                )}
+                {canDelete && (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                                onSelect={(e) => e.preventDefault()}
+                            >
+                                <Trash2 />
+                                Delete Post
+                            </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Are you sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will
+                                    permantly delete your post and remove all
+                                    associated comments and likes.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete}>
+                                    Delete
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 )}
             </DropdownMenuContent>
         </DropdownMenu>
