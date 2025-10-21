@@ -34,6 +34,7 @@ class PostController extends Controller
             'post' => $post,
             'can' => [
                 'update' => Auth::check() && Auth::user()->can('update', $post),
+                'delete' => Auth::check() && Auth::user()->can('delete', $post),
             ],
             'comments' => Inertia::scroll(
                 fn () => $post->comments()
@@ -73,7 +74,7 @@ class PostController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
-        return redirect('/posts');
+        return redirect('/posts')->with('success', 'Post create successfully');
     }
 
     public function edit(Post $post): Response
@@ -94,7 +95,7 @@ class PostController extends Controller
 
         $post->update($validated);
 
-        return redirect()->route('posts.show', $post);
+        return redirect()->route('posts.show', $post)->with('success', 'Post updated successfully');
     }
 
     public function destroy(Post $post): RedirectResponse
@@ -103,6 +104,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect('/posts');
+        return redirect('/posts')->with('success', 'Post deleted successfully');
     }
 }
